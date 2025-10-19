@@ -1,0 +1,25 @@
+# robots.txt - Sistema de Inventario MOLTEC S.A.
+# Desarrollado en React + Vite + Node.js + MySQL
+
+# Permitir acceso a todos los buscadores
+User-agent: *
+Allow: /
+
+# Bloquear acceso a carpetas del sistema y backend
+Disallow: /api/
+Disallow: /backend/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /*.env$
+
+# Permitir acceso a recursos públicos
+Allow: /assets/
+Allow: /LogoMoltecV5.png
+Allow: /*.css$
+Allow: /*.js$
+
+# Velocidad de rastreo (1 segundo entre solicitudes)
+Crawl-delay: 1
+
+# Sitemap (descomenta cuando tengas uno)
+# Sitemap: https://tudominio.com/sitemap.xml
