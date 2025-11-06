@@ -325,7 +325,7 @@ const ClientesCRUD = () => {
           <input
             type="text"
             className="crud-search-input"
-            placeholder="Buscar clientes por nombre, apellido, correo, teléfono o NIT..."
+            placeholder="Buscar clientes por nombre, contacto, correo, teléfono o NIT..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
@@ -397,6 +397,7 @@ const ClientesCRUD = () => {
           <thead>
             <tr>
               <th className="crud-th">Nombre Completo</th>
+              <th className="crud-th">Contacto</th>
               <th className="crud-th">Correo Electrónico</th>
               <th className="crud-th">Teléfono</th>
               <th className="crud-th">NIT</th>
@@ -409,9 +410,21 @@ const ClientesCRUD = () => {
               clientesFiltrados.map((cliente) => (
                 <tr key={cliente.id} className="crud-table-row">
                   <td className="crud-td">
-                    <strong>
-                      {cliente.nombre} {cliente.apellido}
-                    </strong>
+                    <strong>{cliente.nombre}</strong>
+                  </td>
+                  {/* Contacto: aquí va el apellido */}
+                  <td className="crud-td">
+                    {cliente.apellido || (
+                      <span
+                        style={{
+                          color: "#a0aec0",
+                          fontStyle: "italic",
+                          fontSize: 14,
+                        }}
+                      >
+                        Sin contacto
+                      </span>
+                    )}
                   </td>
                   <td className="crud-td">
                     {cliente.correo ? (
@@ -528,7 +541,7 @@ const ClientesCRUD = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="crud-no-results">
+                <td colSpan="7" className="crud-no-results">
                   {busqueda
                     ? `No se encontraron clientes que coincidan con "${busqueda}"`
                     : "No hay clientes registrados"}
@@ -558,21 +571,21 @@ const ClientesCRUD = () => {
                         value={formData.nombre}
                         onChange={(e) => {
                           const value = e.target.value;
-                          if (value.length <= 15) {
+                          if (value.length <= 50) {
                             setFormData({ ...formData, nombre: value });
                           }
                         }}
                         required
                         placeholder="Juan Carlos"
-                        maxLength="15"
+                        maxLength="50"
                       />
                       <span className="crud-char-counter">
-                        {formData.nombre.length}/15
+                        {formData.nombre.length}/50
                       </span>
                     </div>
                   </div>
                   <div className="crud-form-group">
-                    <label className="crud-label">Apellido *</label>
+                    <label className="crud-label">Contacto *</label>
                     <div className="crud-input-with-counter">
                       <input
                         type="text"
@@ -580,16 +593,16 @@ const ClientesCRUD = () => {
                         value={formData.apellido}
                         onChange={(e) => {
                           const value = e.target.value;
-                          if (value.length <= 25) {
+                          if (value.length <= 35) {
                             setFormData({ ...formData, apellido: value });
                           }
                         }}
                         required
-                        placeholder="Pérez López"
-                        maxLength="25"
+                        placeholder="Contacto"
+                        maxLength="35"
                       />
                       <span className="crud-char-counter">
-                        {formData.apellido.length}/25
+                        {formData.apellido.length}/35
                       </span>
                     </div>
                   </div>
@@ -657,7 +670,7 @@ const ClientesCRUD = () => {
                   <p
                     style={{ margin: "0", fontSize: "14px", color: "#2d3748" }}
                   >
-                    💡 <strong>Límites:</strong> Nombre (15 chars), Apellido (25
+                    💡 <strong>Límites:</strong> Nombre (50 chars), Contacto (35
                     chars), Teléfono (8 dígitos), NIT (9 dígitos)
                   </p>
                 </div>
@@ -702,21 +715,21 @@ const ClientesCRUD = () => {
                         value={formData.nombre}
                         onChange={(e) => {
                           const value = e.target.value;
-                          if (value.length <= 15) {
+                          if (value.length <= 50) {
                             setFormData({ ...formData, nombre: value });
                           }
                         }}
                         required
-                        maxLength="15"
+                        maxLength="50"
                         placeholder="Juan Carlos"
                       />
                       <span className="crud-char-counter">
-                        {formData.nombre.length}/15
+                        {formData.nombre.length}/50
                       </span>
                     </div>
                   </div>
                   <div className="crud-form-group">
-                    <label className="crud-label">Apellido *</label>
+                    <label className="crud-label">Contacto *</label>
                     <div className="crud-input-with-counter">
                       <input
                         type="text"
@@ -724,16 +737,16 @@ const ClientesCRUD = () => {
                         value={formData.apellido}
                         onChange={(e) => {
                           const value = e.target.value;
-                          if (value.length <= 25) {
+                          if (value.length <= 35) {
                             setFormData({ ...formData, apellido: value });
                           }
                         }}
                         required
-                        maxLength="25"
-                        placeholder="Pérez López"
+                        maxLength="35"
+                        placeholder="Contacto"
                       />
                       <span className="crud-char-counter">
-                        {formData.apellido.length}/25
+                        {formData.apellido.length}/35
                       </span>
                     </div>
                   </div>
@@ -811,7 +824,7 @@ const ClientesCRUD = () => {
                   <p
                     style={{ margin: "0", fontSize: "12px", color: "#4a5568" }}
                   >
-                    💡 <strong>Límites:</strong> Nombre (15 chars), Apellido (25
+                    💡 <strong>Límites:</strong> Nombre (50 chars), Contacto (35
                     chars), Teléfono (8 dígitos), NIT (9 dígitos)
                   </p>
                 </div>

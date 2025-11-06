@@ -67,25 +67,24 @@ const crearCliente = async (req, res) => {
     if (!nombre?.trim() || !apellido?.trim()) {
       return res.status(400).json({
         success: false,
-        error: "Nombre y apellido son campos obligatorios",
+        error: "Nombre y contacto son campos obligatorios",
       });
     }
 
     // 🔍 Validar longitud del nombre (máximo 15 caracteres)
-    if (nombre.trim().length > 15) {
-      return res.status(400).json({
-        success: false,
-        error: "El nombre no puede exceder 15 caracteres",
-      });
-    }
+    if (nombre.trim().length > 50) {
+  return res.status(400).json({
+    success: false,
+    error: "El nombre no puede exceder 50 caracteres",
+  });
+}
 
-    // 🔍 Validar longitud del apellido (máximo 25 caracteres)
-    if (apellido.trim().length > 25) {
-      return res.status(400).json({
-        success: false,
-        error: "El apellido no puede exceder 25 caracteres",
-      });
-    }
+if (apellido.trim().length > 35) {
+  return res.status(400).json({
+    success: false,
+    error: "El contacto no puede exceder 35 caracteres",
+  });
+}
 
     // 🔍 Validar formato de correo electrónico
     if (correo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
@@ -311,20 +310,19 @@ const actualizarCliente = async (req, res) => {
     }
 
     // 🔍 Validar longitud del nombre (máximo 15 caracteres)
-    if (nombre.trim().length > 15) {
-      return res.status(400).json({
-        success: false,
-        error: "El nombre no puede exceder 15 caracteres",
-      });
-    }
+   if (nombre.trim().length > 50) {
+  return res.status(400).json({
+    success: false,
+    error: "El nombre no puede exceder 50 caracteres",
+  });
+}
 
-    // 🔍 Validar longitud del apellido (máximo 25 caracteres)
-    if (apellido.trim().length > 25) {
-      return res.status(400).json({
-        success: false,
-        error: "El apellido no puede exceder 25 caracteres",
-      });
-    }
+if (apellido.trim().length > 35) {
+  return res.status(400).json({
+    success: false,
+    error: "El contacto no puede exceder 35 caracteres",
+  });
+}
 
     // 🔍 Validar formato de correo electrónico
     if (correo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {

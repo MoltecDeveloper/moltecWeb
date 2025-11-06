@@ -2,8 +2,8 @@
 // 🔧 CONFIGURACIÓN REUTILIZABLE - Cambiar para otros CRUDs
 const API_CONFIG = {
   baseURL: import.meta.env.VITE_API_URL,
-  endpoint: 'clientes', // 👈 Cambiar por 'herramientas', 'empleados', etc.
-  timeout: 10000
+  endpoint: "clientes", // 👈 Cambiar por 'herramientas', 'empleados', etc.
+  timeout: 10000,
 };
 
 class ClientesAPI {
@@ -13,10 +13,10 @@ class ClientesAPI {
 
   // 🔒 Obtener token de autenticación
   getAuthHeaders() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     return {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
+      "Content-Type": "application/json",
+      Authorization: token ? `Bearer ${token}` : "",
     };
   }
 
@@ -26,7 +26,7 @@ class ClientesAPI {
       const response = await fetch(url, {
         headers: this.getAuthHeaders(),
         ...options,
-        timeout: API_CONFIG.timeout
+        timeout: API_CONFIG.timeout,
       });
 
       const data = await response.json();
@@ -37,29 +37,29 @@ class ClientesAPI {
 
       return data;
     } catch (error) {
-      console.error('❌ API Error:', error);
+      console.error("❌ API Error:", error);
       throw error;
     }
   }
 
   // 📋 OBTENER TODOS LOS CLIENTES
   async obtenerClientes() {
-    console.log('👥 Obteniendo clientes...');
-    
+    console.log("👥 Obteniendo clientes...");
+
     try {
       const data = await this.makeRequest(this.baseURL);
       console.log(`✅ ${data.data.length} clientes obtenidos`);
       return data;
     } catch (error) {
-      console.error('❌ Error al obtener clientes:', error);
-      throw new Error('No se pudieron cargar los clientes');
+      console.error("❌ Error al obtener clientes:", error);
+      throw new Error("No se pudieron cargar los clientes");
     }
   }
 
   // ➕ CREAR NUEVO CLIENTE
   async crearCliente(clienteData) {
-    console.log('➕ Creando cliente:', clienteData);
-    
+    console.log("➕ Creando cliente:", clienteData);
+
     try {
       // 🔍 VALIDACIONES DE FORMATO EN FRONTEND
       const errores = this.validarClienteFormato(clienteData);
@@ -68,14 +68,14 @@ class ClientesAPI {
       }
 
       const data = await this.makeRequest(this.baseURL, {
-        method: 'POST',
-        body: JSON.stringify(clienteData)
+        method: "POST",
+        body: JSON.stringify(clienteData),
       });
-      
-      console.log('✅ Cliente creado exitosamente');
+
+      console.log("✅ Cliente creado exitosamente");
       return data;
     } catch (error) {
-      console.error('❌ Error al crear cliente:', error);
+      console.error("❌ Error al crear cliente:", error);
       throw error;
     }
   }
@@ -84,7 +84,7 @@ class ClientesAPI {
   // Solo valida FORMATO, NO duplicados (el backend se encarga de eso)
   async actualizarCliente(id, clienteData) {
     console.log(`✏️ Actualizando cliente ID: ${id}`, clienteData);
-    
+
     try {
       // 🔍 SOLO VALIDACIONES DE FORMATO (NO de duplicados)
       const errores = this.validarClienteFormato(clienteData);
@@ -93,14 +93,14 @@ class ClientesAPI {
       }
 
       const data = await this.makeRequest(`${this.baseURL}/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(clienteData)
+        method: "PUT",
+        body: JSON.stringify(clienteData),
       });
-      
-      console.log('✅ Cliente actualizado exitosamente');
+
+      console.log("✅ Cliente actualizado exitosamente");
       return data;
     } catch (error) {
-      console.error('❌ Error al actualizar cliente:', error);
+      console.error("❌ Error al actualizar cliente:", error);
       throw error;
     }
   }
@@ -108,54 +108,56 @@ class ClientesAPI {
   // 🗑️ ELIMINAR CLIENTE
   async eliminarCliente(id) {
     console.log(`🗑️ Eliminando cliente ID: ${id}`);
-    
+
     try {
       const data = await this.makeRequest(`${this.baseURL}/${id}`, {
-        method: 'DELETE'
+        method: "DELETE",
       });
-      
-      console.log('✅ Cliente eliminado exitosamente');
+
+      console.log("✅ Cliente eliminado exitosamente");
       return data;
     } catch (error) {
-      console.error('❌ Error al eliminar cliente:', error);
+      console.error("❌ Error al eliminar cliente:", error);
       throw error;
     }
   }
 
   // 📊 OBTENER ESTADÍSTICAS
   async obtenerEstadisticas() {
-    console.log('📊 Obteniendo estadísticas...');
-    
+    console.log("📊 Obteniendo estadísticas...");
+
     try {
       const data = await this.makeRequest(`${this.baseURL}/estadisticas`);
-      console.log('✅ Estadísticas obtenidas');
+      console.log("✅ Estadísticas obtenidas");
       return data;
     } catch (error) {
-      console.error('❌ Error al obtener estadísticas:', error);
-      throw new Error('No se pudieron cargar las estadísticas');
+      console.error("❌ Error al obtener estadísticas:", error);
+      throw new Error("No se pudieron cargar las estadísticas");
     }
   }
 
   // 🔍 BUSCAR CLIENTES
-  async buscarClientes(query, tipo = 'todos') {
+  async buscarClientes(query, tipo = "todos") {
     console.log(`🔍 Buscando clientes: "${query}" (${tipo})`);
-    
+
     try {
       if (!query || query.trim().length < 2) {
-        throw new Error('El término de búsqueda debe tener al menos 2 caracteres');
+        throw new Error(
+          "El término de búsqueda debe tener al menos 2 caracteres"
+        );
       }
 
       const params = new URLSearchParams();
-      params.append('q', query.trim());
-      if (tipo !== 'todos') {
-        params.append('tipo', tipo);
+      params.append("q", query.trim());
+      if (tipo !== "todos") {
+        params.append("tipo", tipo);
       }
 
       const data = await this.makeRequest(`${this.baseURL}/buscar?${params}`);
       console.log(`✅ Búsqueda completada: ${data.total} resultados`);
       return data;
     } catch (error) {
-      console.error('❌ Error en búsqueda:', error);
+      console.error("❌ Error en búsqueda:", error);
       throw error;
     }
   }
@@ -163,15 +165,19 @@ class ClientesAPI {
   // 🔍 FILTRADO LOCAL (método helper para filtrado en frontend)
   filtrarClientes(clientes, termino) {
     if (!termino) return clientes;
-    
+
     const terminoLower = termino.toLowerCase();
-    return clientes.filter(cliente => 
-      cliente.nombre.toLowerCase().includes(terminoLower) ||
-      cliente.apellido.toLowerCase().includes(terminoLower) ||
-      (cliente.correo && cliente.correo.toLowerCase().includes(terminoLower)) ||
-      (cliente.telefono && cliente.telefono.includes(terminoLower)) ||
-      (cliente.nit && cliente.nit.includes(terminoLower)) ||
-      `${cliente.nombre} ${cliente.apellido}`.toLowerCase().includes(terminoLower)
+    return clientes.filter(
+      (cliente) =>
+        cliente.nombre.toLowerCase().includes(terminoLower) ||
+        cliente.apellido.toLowerCase().includes(terminoLower) ||
+        (cliente.correo &&
+          cliente.correo.toLowerCase().includes(terminoLower)) ||
+        (cliente.telefono && cliente.telefono.includes(terminoLower)) ||
+        (cliente.nit && cliente.nit.includes(terminoLower)) ||
+        `${cliente.nombre} ${cliente.apellido}`
+          .toLowerCase()
+          .includes(terminoLower)
     );
   }
 
@@ -180,25 +186,25 @@ class ClientesAPI {
     return {
       ...cliente,
       nombreCompleto: `${cliente.nombre} ${cliente.apellido}`,
-      fechaRegistroFormateada: this.formatearFecha(cliente.fechaRegistro)
+      fechaRegistroFormateada: this.formatearFecha(cliente.fechaRegistro),
     };
   }
 
   // 📅 FORMATEAR FECHA
   formatearFecha(fecha) {
-    if (!fecha) return 'N/A';
-    
+    if (!fecha) return "N/A";
+
     try {
       const fechaObj = new Date(fecha);
-      return fechaObj.toLocaleDateString('es-GT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+      return fechaObj.toLocaleDateString("es-GT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       });
     } catch (error) {
-      return 'Fecha inválida';
+      return "Fecha inválida";
     }
   }
 
@@ -210,34 +216,39 @@ class ClientesAPI {
 
     // Validaciones requeridas
     if (!clienteData.nombre?.trim()) {
-      errores.push('El nombre es obligatorio');
-    } else if (clienteData.nombre.trim().length > 15) {
-      errores.push('El nombre no puede exceder 15 caracteres');
+      errores.push("El nombre es obligatorio");
+    } else if (clienteData.nombre.trim().length > 50) {
+      errores.push("El nombre no puede exceder 50 caracteres");
     }
 
     if (!clienteData.apellido?.trim()) {
-      errores.push('El apellido es obligatorio');
-    } else if (clienteData.apellido.trim().length > 25) {
-      errores.push('El apellido no puede exceder 25 caracteres');
+      errores.push("El contacto es obligatorio");
+    } else if (clienteData.apellido.trim().length > 35) {
+      errores.push("El contacto no puede exceder 35 caracteres");
     }
 
     // Validar FORMATO de correo (NO si ya existe)
-    if (clienteData.correo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clienteData.correo)) {
-      errores.push('El formato del correo electrónico no es válido');
+    if (
+      clienteData.correo &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clienteData.correo)
+    ) {
+      errores.push("El formato del correo electrónico no es válido");
     }
 
     // Validar FORMATO de teléfono: exactamente 8 dígitos (NO si ya existe)
     if (clienteData.telefono) {
-      const telefonoLimpio = clienteData.telefono.replace(/[-\s]/g, '');
+      const telefonoLimpio = clienteData.telefono.replace(/[-\s]/g, "");
       if (!/^\d{8}$/.test(telefonoLimpio)) {
-        errores.push('El teléfono debe tener exactamente 8 dígitos');
+        errores.push("El teléfono debe tener exactamente 8 dígitos");
       }
     }
 
     // Validar FORMATO de NIT: máximo 9 dígitos (NO si ya existe)
     if (clienteData.nit) {
       if (!/^\d{1,9}(-\d)?$/.test(clienteData.nit.trim())) {
-        errores.push('El NIT debe tener máximo 9 dígitos (formato: 12345678 o 12345678-9)');
+        errores.push(
+          "El NIT debe tener máximo 9 dígitos (formato: 12345678 o 12345678-9)"
+        );
       }
     }
 
@@ -254,7 +265,7 @@ class ClientesAPI {
   async validarConexion() {
     try {
       const response = await fetch(`${API_CONFIG.baseURL}`, {
-        headers: this.getAuthHeaders()
+        headers: this.getAuthHeaders(),
       });
       return response.ok;
     } catch {
@@ -266,14 +277,15 @@ class ClientesAPI {
   generarEstadisticasLocales(clientes) {
     return {
       total: clientes.length,
-      conCorreo: clientes.filter(c => c.correo && c.correo.trim()).length,
-      conTelefono: clientes.filter(c => c.telefono && c.telefono.trim()).length,
-      conNIT: clientes.filter(c => c.nit && c.nit.trim()).length,
-      registrosHoy: clientes.filter(c => {
+      conCorreo: clientes.filter((c) => c.correo && c.correo.trim()).length,
+      conTelefono: clientes.filter((c) => c.telefono && c.telefono.trim())
+        .length,
+      conNIT: clientes.filter((c) => c.nit && c.nit.trim()).length,
+      registrosHoy: clientes.filter((c) => {
         const hoy = new Date().toDateString();
         const fechaCliente = new Date(c.fechaRegistro).toDateString();
         return hoy === fechaCliente;
-      }).length
+      }).length,
     };
   }
 }

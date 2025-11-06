@@ -573,7 +573,7 @@ const HerramientasCRUD = () => {
             </select>
           </div>
           <div className="crud-filter-group">
-            <label className="crud-filter-label">Estado Herramienta:</label>
+            <label className="crud-filter-label">Desgaste Herramienta:</label>
             <select
               className="crud-filter-input"
               value={filtros.estadoHerramienta}
@@ -581,7 +581,7 @@ const HerramientasCRUD = () => {
                 manejarCambioFiltro("estadoHerramienta", e.target.value)
               }
             >
-              <option value="todos">🔧 Todos los estados</option>
+              <option value="todos">🔧 Todos los desgastes</option>
               <option value="Nuevo">✨ Nuevo</option>
               <option value="En buen estado">👍 En buen estado</option>
               <option value="Desgastado">⚠️ Desgastado</option>
@@ -639,7 +639,7 @@ const HerramientasCRUD = () => {
               )}
               {filtros.estadoHerramienta !== "todos" && (
                 <span className="crud-filter-tag">
-                  Estado: {filtros.estadoHerramienta}
+                  Desgaste: {filtros.estadoHerramienta}
                 </span>
               )}
               {filtros.fechaIngreso && (
@@ -672,7 +672,7 @@ const HerramientasCRUD = () => {
               <th className="crud-th">Stock Actual</th>
               <th className="crud-th">Stock Mínimo</th>
               <th className="crud-th">Estado Stock</th>
-              <th className="crud-th">Estado</th>
+              <th className="crud-th">Desgaste</th>
               <th className="crud-th">Fecha Ingreso</th>
               <th className="crud-th">Última Actualización</th>
               <th className="crud-th">Acciones</th>
@@ -824,14 +824,14 @@ const HerramientasCRUD = () => {
                 >
                   <option value="completo">📊 Reporte Completo</option>
                   <option value="por-estado">
-                    🔧 Por Estado de Herramienta
+                    🔧 Por Desgaste de Herramienta
                   </option>
                   <option value="por-stock">📦 Por Nivel de Stock</option>
                 </select>
               </div>
               {configuracionReporte.tipoReporte === "por-estado" && (
                 <div className="crud-form-group">
-                  <label className="crud-label">Estado de Herramienta</label>
+                  <label className="crud-label">Desgaste de Herramienta</label>
                   <select
                     className="crud-select"
                     value={configuracionReporte.estadoSeleccionado}
@@ -1162,7 +1162,7 @@ const HerramientasCRUD = () => {
                     </div>
                   </div>
                   <div className="crud-form-group">
-                    <label className="crud-label">Estado</label>
+                    <label className="crud-label">Desgaste</label>
                     <select
                       className="crud-select"
                       value={formData.estado}
@@ -1392,7 +1392,7 @@ const HerramientasCRUD = () => {
                     </div>
                   </div>
                   <div className="crud-form-group">
-                    <label className="crud-label">Estado</label>
+                    <label className="crud-label">Desgaste</label>
                     <select
                       className="crud-select"
                       value={formData.estado}
