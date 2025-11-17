@@ -192,28 +192,67 @@ class MaterialesAPI {
 
   // 🎯 DETERMINAR ESTADO DEL STOCK (método helper)
   getEstadoStock(cantidadActual, cantidadMinima) {
-    if (cantidadActual <= cantidadMinima) {
-      return {
-        texto: "Stock Crítico",
-        color: "#e53e3e",
-        bg: "#fed7d7",
-        //icon: '🔴'
-      };
-    } else if (cantidadActual <= cantidadMinima * 2) {
-      return {
-        texto: "Stock Bajo",
-        color: "#dd6b20",
-        bg: "#feebc8",
-        //icon: '🟡'
-      };
-    } else {
-      return {
-        texto: "Stock Normal",
-        color: "#38a169",
-        bg: "#c6f6d5",
-        //icon: '🟢'
-      };
-    }
+    const actual = Number(cantidadActual ?? 0);
+  const minimo = Number(cantidadMinima ?? 0);
+
+  // Si algo viene raro, lo tratamos como stock normal
+  if (isNaN(actual) || isNaN(minimo)) {
+    return {
+      texto: "Stock Normal",
+      color: "#38a169",
+      bg: "#c6f6d5",
+      //icon: "🟢",
+    };
+  }
+
+  // ⚠️ LÓGICA BASE
+  // Crítico: actual < mínimo
+  // Bajo:   mínimo <= actual <= 2 * mínimo
+  // Normal: actual > 2 * mínimo
+  if (actual < minimo) {
+    return {
+      texto: "Stock Crítico",
+      color: "#e53e3e",
+      bg: "#fed7d7",
+      //icon: "🔴",
+    };
+  } else if (actual <= minimo * 2) {
+    return {
+      texto: "Stock Bajo",
+      color: "#dd6b20",
+      bg: "#feebc8",
+      //icon: "🟡",
+    };
+  } else {
+    return {
+      texto: "Stock Normal",
+      color: "#38a169",
+      bg: "#c6f6d5",
+      //icon: "🟢",
+    };
+  }
+    // if (cantidadActual < cantidadMinima) {
+    //   return {
+    //     texto: "Stock Crítico",
+    //     color: "#e53e3e",
+    //     bg: "#fed7d7",
+    //     //icon: '🔴'
+    //   };
+    // } else if (cantidadActual <= cantidadMinima * 2) {
+    //   return {
+    //     texto: "Stock Bajo",
+    //     color: "#dd6b20",
+    //     bg: "#feebc8",
+    //     //icon: '🟡'
+    //   };
+    // } else {
+    //   return {
+    //     texto: "Stock Normal",
+    //     color: "#38a169",
+    //     bg: "#c6f6d5",
+    //     //icon: '🟢'
+    //   };
+    // }
   }
 
   // 📊 OBTENER MOVIMIENTOS DE HERRAMIENTAS

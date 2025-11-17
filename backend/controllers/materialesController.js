@@ -191,9 +191,9 @@ const crearMaterial = async (req, res) => {
 
     // Verificar si ya existe un material activo con el mismo nombre
     // const checkQuery = `
-    //   SELECT COUNT(*) as count 
-    //   FROM ${TABLE_CONFIG.tableName} 
-    //   WHERE ${TABLE_CONFIG.fields.nombre} = ? 
+    //   SELECT COUNT(*) as count
+    //   FROM ${TABLE_CONFIG.tableName}
+    //   WHERE ${TABLE_CONFIG.fields.nombre} = ?
     //   AND ${TABLE_CONFIG.statusField} = 1
     // `;
     // const [existing] = await db.query(checkQuery, [nombre.trim()]);
@@ -688,9 +688,27 @@ const obtenerEstadisticas = async (req, res) => {
     const statsQuery = `
       SELECT 
         COUNT(*) as totalMateriales,
-        SUM(CASE WHEN ${TABLE_CONFIG.fields.cantidadActual} <= ${TABLE_CONFIG.fields.cantidadMinima} THEN 1 ELSE 0 END) as stockCritico,
-        SUM(CASE WHEN ${TABLE_CONFIG.fields.cantidadActual} > ${TABLE_CONFIG.fields.cantidadMinima} AND ${TABLE_CONFIG.fields.cantidadActual} <= ${TABLE_CONFIG.fields.cantidadMinima} * 2 THEN 1 ELSE 0 END) as stockBajo,
-        SUM(CASE WHEN ${TABLE_CONFIG.fields.cantidadActual} > ${TABLE_CONFIG.fields.cantidadMinima} * 2 THEN 1 ELSE 0 END) as stockNormal,
+        SUM(
+  CASE 
+    WHEN ${TABLE_CONFIG.fields.cantidadActual} < ${TABLE_CONFIG.fields.cantidadMinima}
+    THEN 1 ELSE 0 
+  END
+) AS stockCritico,
+
+SUM(
+  CASE 
+    WHEN ${TABLE_CONFIG.fields.cantidadActual} >= ${TABLE_CONFIG.fields.cantidadMinima}
+     AND ${TABLE_CONFIG.fields.cantidadActual} <= ${TABLE_CONFIG.fields.cantidadMinima} * 2
+    THEN 1 ELSE 0 
+  END
+) AS stockBajo,
+
+SUM(
+  CASE 
+    WHEN ${TABLE_CONFIG.fields.cantidadActual} > ${TABLE_CONFIG.fields.cantidadMinima} * 2
+    THEN 1 ELSE 0 
+  END
+) AS stockNormal,
         AVG(${TABLE_CONFIG.fields.cantidadActual}) as promedioStock
       FROM ${TABLE_CONFIG.tableName}
       WHERE ${TABLE_CONFIG.statusField} = 1
@@ -757,14 +775,13 @@ const obtenerMovimientosMateriales = async (req, res) => {
     res.json({
       success: true,
       data: movimientos,
-      total: movimientos.length
+      total: movimientos.length,
     });
-
   } catch (error) {
     console.error("❌ Error al obtener movimientos de materiales:", error);
     res.status(500).json({
       success: false,
-      error: "Error interno del servidor"
+      error: "Error interno del servidor",
     });
   }
 };

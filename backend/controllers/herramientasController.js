@@ -712,9 +712,26 @@ const obtenerEstadisticas = async (req, res) => {
         COUNT(*) as totalHerramientas,
         
         -- Estadísticas de Stock
-        SUM(CASE WHEN ${TABLE_CONFIG.fields.cantidadActual} <= ${TABLE_CONFIG.fields.cantidadMinima} THEN 1 ELSE 0 END) as stockCritico,
-        SUM(CASE WHEN ${TABLE_CONFIG.fields.cantidadActual} <= ${TABLE_CONFIG.fields.cantidadMinima} * 2 AND ${TABLE_CONFIG.fields.cantidadActual} > ${TABLE_CONFIG.fields.cantidadMinima} THEN 1 ELSE 0 END) as stockBajo,
-        SUM(CASE WHEN ${TABLE_CONFIG.fields.cantidadActual} > ${TABLE_CONFIG.fields.cantidadMinima} * 2 THEN 1 ELSE 0 END) as stockNormal,
+       SUM(
+          CASE 
+            WHEN ${TABLE_CONFIG.fields.cantidadActual} < ${TABLE_CONFIG.fields.cantidadMinima}
+            THEN 1 ELSE 0 
+          END
+        ) as stockCritico,
+        SUM(
+          CASE 
+            WHEN ${TABLE_CONFIG.fields.cantidadActual} >= ${TABLE_CONFIG.fields.cantidadMinima}
+             AND ${TABLE_CONFIG.fields.cantidadActual} <= ${TABLE_CONFIG.fields.cantidadMinima} * 2
+            THEN 1 ELSE 0 
+          END
+        ) as stockBajo,
+        SUM(
+          CASE 
+            WHEN ${TABLE_CONFIG.fields.cantidadActual} > ${TABLE_CONFIG.fields.cantidadMinima} * 2
+            THEN 1 ELSE 0 
+          END
+        ) as stockNormal,
+
         
         -- Estadísticas por Estado de Herramientas
         SUM(CASE WHEN ${TABLE_CONFIG.fields.estado} = 'Nuevo' THEN 1 ELSE 0 END) as herramientasNuevas,

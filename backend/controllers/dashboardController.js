@@ -151,7 +151,7 @@ const obtenerStockHerramientas = async () => {
   const query = `
     SELECT 
       CASE 
-        WHEN inventario_herramientas_cantidad_actual <= inventario_herramientas_cantidad_minima THEN 'Stock Crítico'
+        WHEN inventario_herramientas_cantidad_actual < inventario_herramientas_cantidad_minima THEN 'Stock Crítico'
         WHEN inventario_herramientas_cantidad_actual <= inventario_herramientas_cantidad_minima * 2 THEN 'Stock Bajo'
         ELSE 'Stock Normal'
       END as estadoStock,
@@ -179,7 +179,7 @@ const obtenerStockMateriales = async () => {
   const query = `
     SELECT 
       CASE 
-        WHEN inventario_materiales_cantidad_actual <= inventario_materiales_cantidad_minima THEN 'Stock Crítico'
+        WHEN inventario_materiales_cantidad_actual < inventario_materiales_cantidad_minima THEN 'Stock Crítico'
         WHEN inventario_materiales_cantidad_actual <= inventario_materiales_cantidad_minima * 2 THEN 'Stock Bajo'
         ELSE 'Stock Normal'
       END as estadoStock,

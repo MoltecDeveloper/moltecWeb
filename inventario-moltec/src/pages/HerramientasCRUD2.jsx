@@ -126,9 +126,12 @@ const HerramientasCRUD = () => {
     });
   };
   const determinarEstadoStock = (cantidadActual, cantidadMinima) => {
-    if (cantidadActual <= cantidadMinima) return "critico";
-    if (cantidadActual <= cantidadMinima * 2) return "bajo";
-    return "normal";
+    const actual = Number(cantidadActual ?? 0);
+    const minimo = Number(cantidadMinima ?? 0);
+
+    if (actual < minimo) return "critico"; // stock menor al mínimo
+    if (actual <= minimo * 2) return "bajo"; // desde el mínimo hasta 2x
+    return "normal"; // mayor a 2x
   };
   const formatearFechaLocal = (fechaString) => {
     if (!fechaString) return "N/A";

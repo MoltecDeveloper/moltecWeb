@@ -302,26 +302,43 @@ class HerramientasAPI {
 
   // 🎯 DETERMINAR ESTADO DEL STOCK (método helper)
   getEstadoStock(cantidadActual, cantidadMinima) {
-    if (cantidadActual <= cantidadMinima) {
-      return {
-        texto: "Stock Crítico",
-        color: "#e53e3e",
-        bg: "#fed7d7",
-      };
-    } else if (cantidadActual <= cantidadMinima * 2) {
-      return {
-        texto: "Stock Bajo",
-        color: "#dd6b20",
-        bg: "#feebc8",
-      };
-    } else {
-      return {
-        texto: "Stock Normal",
-        color: "#38a169",
-        bg: "#c6f6d5",
-      };
-    }
+  const actual = Number(cantidadActual ?? 0);
+  const minimo = Number(cantidadMinima ?? 0);
+
+  // Si algo viene raro, devolvemos normal por defecto
+  if (isNaN(actual) || isNaN(minimo)) {
+    return {
+      texto: "Stock Normal",
+      color: "#38a169",
+      bg: "#c6f6d5",
+    };
   }
+
+  // Crítico: actual < mínimo
+  if (actual < minimo) {
+    return {
+      texto: "Stock Crítico",
+      color: "#e53e3e",
+      bg: "#fed7d7",
+    };
+  }
+
+  // Bajo: mínimo <= actual <= 2 * mínimo
+  if (actual <= minimo * 2) {
+    return {
+      texto: "Stock Bajo",
+      color: "#dd6b20",
+      bg: "#feebc8",
+    };
+  }
+
+  // Normal: actual > 2 * mínimo
+  return {
+    texto: "Stock Normal",
+    color: "#38a169",
+    bg: "#c6f6d5",
+  };
+}
 
   // 🎯 DETERMINAR COLOR DEL ESTADO
   getEstadoColor(estado) {

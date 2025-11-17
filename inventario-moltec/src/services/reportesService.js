@@ -52,6 +52,13 @@ class ReportesService {
           (material.inventario_materiales_cantidad_minima ||
             material.cantidadMinima)
       );
+      // const materialesCriticos = materiales.filter(
+      //   (material) =>
+      //     (material.inventario_materiales_cantidad_actual ||
+      //       material.cantidadActual) <=
+      //     (material.inventario_materiales_cantidad_minima ||
+      //       material.cantidadMinima)
+      // );
 
       if (materialesCriticos.length === 0) {
         throw new Error("No hay materiales con stock crítico");
@@ -356,13 +363,27 @@ class ReportesService {
 
   // DETERMINAR ESTADO DEL STOCK
   determinarEstadoStock(cantidadActual, cantidadMinima) {
-    if (cantidadActual <= cantidadMinima) {
+    const actual = Number(cantidadActual ?? 0);
+    const minimo = Number(cantidadMinima ?? 0);
+
+    if (isNaN(actual) || isNaN(minimo)) {
+      return { texto: "Stock Normal", color: "#38a169" };
+    }
+
+    if (actual < minimo) {
       return { texto: "Stock Crítico", color: "#e53e3e" };
-    } else if (cantidadActual <= cantidadMinima * 2) {
+    } else if (actual <= minimo * 2) {
       return { texto: "Stock Bajo", color: "#dd6b20" };
     } else {
       return { texto: "Stock Normal", color: "#38a169" };
     }
+    // if (cantidadActual <= cantidadMinima) {
+    //   return { texto: "Stock Crítico", color: "#e53e3e" };
+    // } else if (cantidadActual <= cantidadMinima * 2) {
+    //   return { texto: "Stock Bajo", color: "#dd6b20" };
+    // } else {
+    //   return { texto: "Stock Normal", color: "#38a169" };
+    // }
   }
 
   // FORMATEAR FECHA PARA MOSTRAR EN TABLA
@@ -420,9 +441,12 @@ class ReportesService {
         material.inventario_materiales_cantidad_minima ||
         material.cantidadMinima;
 
-      if (cantidadActual <= cantidadMinima) {
+      const actual = Number(cantidadActual ?? 0);
+      const minimo = Number(cantidadMinima ?? 0);
+
+      if (actual < minimo) {
         estadisticas.stockCritico++;
-      } else if (cantidadActual <= cantidadMinima * 2) {
+      } else if (actual <= minimo * 2) {
         estadisticas.stockBajo++;
       } else {
         estadisticas.stockNormal++;
@@ -955,10 +979,15 @@ class ReportesService {
       console.log("Generando reporte de stock crítico de herramientas...");
 
       // Filtrar solo herramientas con stock crítico
-      const herramientasCriticas = herramientas.filter(
-        (herramienta) =>
-          herramienta.cantidadActual <= herramienta.cantidadMinima
-      );
+      const herramientasCriticas = herramientas.filter((herramienta) => {
+        const actual = Number(herramienta.cantidadActual ?? 0);
+        const minimo = Number(herramienta.cantidadMinima ?? 0);
+        return actual < minimo;
+      });
+      // const herramientasCriticas = herramientas.filter(
+      //   (herramienta) =>
+      //     herramienta.cantidadActual <= herramienta.cantidadMinima
+      // );
 
       if (herramientasCriticas.length === 0) {
         throw new Error("No hay herramientas con stock crítico");
@@ -1358,13 +1387,27 @@ class ReportesService {
 
   // MÉTODOS HELPER ESPECÍFICOS PARA HERRAMIENTAS
   determinarEstadoStockHerramienta(cantidadActual, cantidadMinima) {
-    if (cantidadActual <= cantidadMinima) {
+    const actual = Number(cantidadActual ?? 0);
+    const minimo = Number(cantidadMinima ?? 0);
+
+    if (isNaN(actual) || isNaN(minimo)) {
+      return { texto: "Stock Normal", color: "#38a169" };
+    }
+
+    if (actual < minimo) {
       return { texto: "Stock Crítico", color: "#e53e3e" };
-    } else if (cantidadActual <= cantidadMinima * 2) {
+    } else if (actual <= minimo * 2) {
       return { texto: "Stock Bajo", color: "#dd6b20" };
     } else {
       return { texto: "Stock Normal", color: "#38a169" };
     }
+    // if (cantidadActual <= cantidadMinima) {
+    //   return { texto: "Stock Crítico", color: "#e53e3e" };
+    // } else if (cantidadActual <= cantidadMinima * 2) {
+    //   return { texto: "Stock Bajo", color: "#dd6b20" };
+    // } else {
+    //   return { texto: "Stock Normal", color: "#38a169" };
+    // }
   }
 
   formatearMarcaModelo(marca, modelo) {
@@ -1505,193 +1548,194 @@ class ReportesService {
 
   // TABLA DE PROYECTOS COMPLETA
   agregarTablaProyectosCompleta(doc, proyectos, configuracion, startY) {
-  // COLUMNAS BASE
-  let columnas = ["Proyecto", "Cliente", "Responsable"];
+    // COLUMNAS BASE
+    let columnas = ["Proyecto", "Cliente", "Responsable"];
 
-  // Agregar columnas según configuración
-  if (configuracion.incluirFechas) {
-    columnas.push("F. Inicio", "F. Est. Fin");
-  }
-
-  columnas.push("Estado");
-
-  if (configuracion.incluirAprobacion) {
-    columnas.push("Aprobado");
-  }
-
-  if (configuracion.incluirFinanzas) {
-    columnas.push("Cotización", "N° Cotiz."); // ⭐ AGREGADA COLUMNA
-  }
-
-  // CONSTRUIR FILAS
-  const filas = proyectos.map((proyecto) => {
-    let fila = [];
-
-    // Datos base
-    fila.push(proyecto.nombre || "Sin nombre");
-    fila.push(proyecto.clienteNombre || "Sin cliente");
-    fila.push(proyecto.responsableNombre || "Sin responsable");
-
-    // Fechas si están habilitadas
+    // Agregar columnas según configuración
     if (configuracion.incluirFechas) {
-      fila.push(this.formatearFecha(proyecto.fechaInicio));
-      fila.push(this.formatearFecha(proyecto.fechaAproxFin));
+      columnas.push("F. Inicio", "F. Est. Fin");
     }
 
-    // Estado siempre
-    fila.push(proyecto.status || "Sin estado");
+    columnas.push("Estado");
 
-    // Aprobación si está habilitada
     if (configuracion.incluirAprobacion) {
-      fila.push(proyecto.aprobado ? "Sí" : "No");
+      columnas.push("Aprobado");
     }
 
-    // Finanzas si están habilitadas
     if (configuracion.incluirFinanzas) {
-      fila.push(this.formatearMonedaParaReporte(proyecto.cotizacion));
-      fila.push(proyecto.numCotizacion ? proyecto.numCotizacion.toString() : "-"); // ⭐ AGREGADO
+      columnas.push("Cotización", "N° Cotiz."); // ⭐ AGREGADA COLUMNA
     }
 
-    return fila;
-  });
+    // CONSTRUIR FILAS
+    const filas = proyectos.map((proyecto) => {
+      let fila = [];
 
+      // Datos base
+      fila.push(proyecto.nombre || "Sin nombre");
+      fila.push(proyecto.clienteNombre || "Sin cliente");
+      fila.push(proyecto.responsableNombre || "Sin responsable");
+
+      // Fechas si están habilitadas
+      if (configuracion.incluirFechas) {
+        fila.push(this.formatearFecha(proyecto.fechaInicio));
+        fila.push(this.formatearFecha(proyecto.fechaAproxFin));
+      }
+
+      // Estado siempre
+      fila.push(proyecto.status || "Sin estado");
+
+      // Aprobación si está habilitada
+      if (configuracion.incluirAprobacion) {
+        fila.push(proyecto.aprobado ? "Sí" : "No");
+      }
+
+      // Finanzas si están habilitadas
+      if (configuracion.incluirFinanzas) {
+        fila.push(this.formatearMonedaParaReporte(proyecto.cotizacion));
+        fila.push(
+          proyecto.numCotizacion ? proyecto.numCotizacion.toString() : "-"
+        ); // ⭐ AGREGADO
+      }
+
+      return fila;
+    });
 
     // ESTILOS DE COLUMNA
-   const columnStyles = this.calcularAnchoColumnasProyectos(configuracion);
+    const columnStyles = this.calcularAnchoColumnasProyectos(configuracion);
 
-  // GENERAR TABLA
-  autoTable(doc, {
-    startY: startY,
-    head: [columnas],
-    body: filas,
-    styles: {
-      fontSize: 8,
-      cellPadding: 2,
-      font: "Arial",
-      textColor: [0, 0, 0],
-      lineColor: [200, 200, 200],
-      lineWidth: 0.1,
-    },
-    headStyles: {
-      fillColor: [19, 31, 43],
-      textColor: [255, 255, 255],
-      fontStyle: "bold",
-      fontSize: 9,
-      font: "Arial",
-    },
-    alternateRowStyles: {
-      fillColor: [248, 250, 252],
-    },
-    columnStyles: columnStyles,
-    didParseCell: function (data) {
-      const estadoIndex = columnas.indexOf("Estado");
-      const aprobadoIndex = columnas.indexOf("Aprobado");
+    // GENERAR TABLA
+    autoTable(doc, {
+      startY: startY,
+      head: [columnas],
+      body: filas,
+      styles: {
+        fontSize: 8,
+        cellPadding: 2,
+        font: "Arial",
+        textColor: [0, 0, 0],
+        lineColor: [200, 200, 200],
+        lineWidth: 0.1,
+      },
+      headStyles: {
+        fillColor: [19, 31, 43],
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+        fontSize: 9,
+        font: "Arial",
+      },
+      alternateRowStyles: {
+        fillColor: [248, 250, 252],
+      },
+      columnStyles: columnStyles,
+      didParseCell: function (data) {
+        const estadoIndex = columnas.indexOf("Estado");
+        const aprobadoIndex = columnas.indexOf("Aprobado");
 
-      // Colorear estado
-      if (data.section === "body" && data.column.index === estadoIndex) {
-        const estado = data.cell.text[0];
-        switch (estado) {
-          case "planificado":
-            data.cell.styles.fillColor = [190, 227, 248];
-            data.cell.styles.textColor = [49, 130, 206];
-            break;
-          case "en progreso":
-            data.cell.styles.fillColor = [254, 235, 200];
-            data.cell.styles.textColor = [154, 52, 18];
-            break;
-          case "completado":
+        // Colorear estado
+        if (data.section === "body" && data.column.index === estadoIndex) {
+          const estado = data.cell.text[0];
+          switch (estado) {
+            case "planificado":
+              data.cell.styles.fillColor = [190, 227, 248];
+              data.cell.styles.textColor = [49, 130, 206];
+              break;
+            case "en progreso":
+              data.cell.styles.fillColor = [254, 235, 200];
+              data.cell.styles.textColor = [154, 52, 18];
+              break;
+            case "completado":
+              data.cell.styles.fillColor = [198, 246, 213];
+              data.cell.styles.textColor = [21, 128, 61];
+              break;
+            case "pausado":
+              data.cell.styles.fillColor = [250, 240, 137];
+              data.cell.styles.textColor = [113, 63, 18];
+              break;
+            case "cancelado":
+              data.cell.styles.fillColor = [254, 215, 215];
+              data.cell.styles.textColor = [185, 28, 28];
+              break;
+          }
+          data.cell.styles.fontStyle = "bold";
+        }
+
+        // Colorear aprobación
+        if (data.section === "body" && data.column.index === aprobadoIndex) {
+          const aprobado = data.cell.text[0];
+          if (aprobado === "Sí") {
             data.cell.styles.fillColor = [198, 246, 213];
             data.cell.styles.textColor = [21, 128, 61];
-            break;
-          case "pausado":
-            data.cell.styles.fillColor = [250, 240, 137];
-            data.cell.styles.textColor = [113, 63, 18];
-            break;
-          case "cancelado":
-            data.cell.styles.fillColor = [254, 215, 215];
-            data.cell.styles.textColor = [185, 28, 28];
-            break;
+            data.cell.styles.fontStyle = "bold";
+          } else {
+            data.cell.styles.fillColor = [254, 235, 200];
+            data.cell.styles.textColor = [154, 52, 18];
+            data.cell.styles.fontStyle = "bold";
+          }
         }
-        data.cell.styles.fontStyle = "bold";
-      }
-
-      // Colorear aprobación
-      if (data.section === "body" && data.column.index === aprobadoIndex) {
-        const aprobado = data.cell.text[0];
-        if (aprobado === "Sí") {
-          data.cell.styles.fillColor = [198, 246, 213];
-          data.cell.styles.textColor = [21, 128, 61];
-          data.cell.styles.fontStyle = "bold";
-        } else {
-          data.cell.styles.fillColor = [254, 235, 200];
-          data.cell.styles.textColor = [154, 52, 18];
-          data.cell.styles.fontStyle = "bold";
-        }
-      }
-    },
-    margin: { left: 20, right: 20 },
-    theme: "striped",
-    showHead: "everyPage",
-  });
-}
+      },
+      margin: { left: 20, right: 20 },
+      theme: "striped",
+      showHead: "everyPage",
+    });
+  }
 
   // CALCULAR ANCHOS DE COLUMNA
   calcularAnchoColumnasProyectos(configuracion) {
-  const columnStyles = {};
-  let currentIndex = 0;
+    const columnStyles = {};
+    let currentIndex = 0;
 
-  // Determinar número total de columnas
-  let totalColumnas = 4; // Proyecto, Cliente, Responsable, Estado
-  if (configuracion.incluirFechas) totalColumnas += 2;
-  if (configuracion.incluirAprobacion) totalColumnas += 1;
-  if (configuracion.incluirFinanzas) totalColumnas += 2; // ⭐ AHORA SON 2: Cotización + N° Cotiz.
+    // Determinar número total de columnas
+    let totalColumnas = 4; // Proyecto, Cliente, Responsable, Estado
+    if (configuracion.incluirFechas) totalColumnas += 2;
+    if (configuracion.incluirAprobacion) totalColumnas += 1;
+    if (configuracion.incluirFinanzas) totalColumnas += 2; // ⭐ AHORA SON 2: Cotización + N° Cotiz.
 
-  if (totalColumnas <= 6) {
-    // Tabla con pocas columnas
-    columnStyles[currentIndex++] = { cellWidth: 35 }; // Proyecto
-    columnStyles[currentIndex++] = { cellWidth: 30 }; // Cliente
-    columnStyles[currentIndex++] = { cellWidth: 30 }; // Responsable
+    if (totalColumnas <= 6) {
+      // Tabla con pocas columnas
+      columnStyles[currentIndex++] = { cellWidth: 35 }; // Proyecto
+      columnStyles[currentIndex++] = { cellWidth: 30 }; // Cliente
+      columnStyles[currentIndex++] = { cellWidth: 30 }; // Responsable
 
-    if (configuracion.incluirFechas) {
-      columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" };
-      columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" };
+      if (configuracion.incluirFechas) {
+        columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" };
+        columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" };
+      }
+
+      columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Estado
+
+      if (configuracion.incluirAprobacion) {
+        columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" };
+      }
+
+      if (configuracion.incluirFinanzas) {
+        columnStyles[currentIndex++] = { cellWidth: 25, halign: "right" }; // Cotización
+        columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // ⭐ N° Cotiz.
+      }
+    } else {
+      // Tabla con muchas columnas (más compacta)
+      columnStyles[currentIndex++] = { cellWidth: 22 }; // Proyecto
+      columnStyles[currentIndex++] = { cellWidth: 20 }; // Cliente
+      columnStyles[currentIndex++] = { cellWidth: 20 }; // Responsable
+
+      if (configuracion.incluirFechas) {
+        columnStyles[currentIndex++] = { cellWidth: 16, halign: "center" };
+        columnStyles[currentIndex++] = { cellWidth: 16, halign: "center" };
+      }
+
+      columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // Estado
+
+      if (configuracion.incluirAprobacion) {
+        columnStyles[currentIndex++] = { cellWidth: 14, halign: "center" };
+      }
+
+      if (configuracion.incluirFinanzas) {
+        columnStyles[currentIndex++] = { cellWidth: 20, halign: "right" }; // Cotización
+        columnStyles[currentIndex++] = { cellWidth: 14, halign: "center" }; // ⭐ N° Cotiz.
+      }
     }
 
-    columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Estado
-
-    if (configuracion.incluirAprobacion) {
-      columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" };
-    }
-
-    if (configuracion.incluirFinanzas) {
-      columnStyles[currentIndex++] = { cellWidth: 25, halign: "right" }; // Cotización
-      columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // ⭐ N° Cotiz.
-    }
-  } else {
-    // Tabla con muchas columnas (más compacta)
-    columnStyles[currentIndex++] = { cellWidth: 22 }; // Proyecto
-    columnStyles[currentIndex++] = { cellWidth: 20 }; // Cliente
-    columnStyles[currentIndex++] = { cellWidth: 20 }; // Responsable
-
-    if (configuracion.incluirFechas) {
-      columnStyles[currentIndex++] = { cellWidth: 16, halign: "center" };
-      columnStyles[currentIndex++] = { cellWidth: 16, halign: "center" };
-    }
-
-    columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // Estado
-
-    if (configuracion.incluirAprobacion) {
-      columnStyles[currentIndex++] = { cellWidth: 14, halign: "center" };
-    }
-
-    if (configuracion.incluirFinanzas) {
-      columnStyles[currentIndex++] = { cellWidth: 20, halign: "right" }; // Cotización
-      columnStyles[currentIndex++] = { cellWidth: 14, halign: "center" }; // ⭐ N° Cotiz.
-    }
+    return columnStyles;
   }
-
-  return columnStyles;
-}
 
   // FORMATEAR MONEDA PARA REPORTES
   formatearMonedaParaReporte(valor) {
@@ -1783,253 +1827,273 @@ class ReportesService {
   }
 
   // MÉTODO PÚBLICO PARA GENERAR REPORTE COMPLETO DE MATERIALES CON CONFIGURACIÓN
-async generarReporteCompletoMateriales(materiales, estadisticas, configuracion = {}) {
-  try {
-    console.log("Generando reporte PDF de materiales con configuración...");
+  async generarReporteCompletoMateriales(
+    materiales,
+    estadisticas,
+    configuracion = {}
+  ) {
+    try {
+      console.log("Generando reporte PDF de materiales con configuración...");
 
-    const doc = new jsPDF();
+      const doc = new jsPDF();
 
-    // Determinar título según configuración
-    let tituloReporte = "REPORTE DE INVENTARIO DE MATERIALES";
-    if (configuracion.tipoReporte === "por-stock") {
-      const nivelTexto = configuracion.nivelStockSeleccionado === "critico" ? "CRÍTICO" :
-                        configuracion.nivelStockSeleccionado === "bajo" ? "BAJO" : "NORMAL";
-      tituloReporte = `REPORTE DE MATERIALES - STOCK ${nivelTexto}`;
-    }
-
-    // ENCABEZADO ESTÁNDAR
-    this.agregarEncabezadoEstandar(doc, tituloReporte, configuracion.nivelStockSeleccionado === "critico");
-
-    // RESUMEN EJECUTIVO PARA MATERIALES
-    const yDespuesResumen = this.agregarResumenEjecutivoMateriales(
-      doc, 
-      estadisticas, 
-      materiales.length, 
-      configuracion
-    );
-
-    // TABLA DE MATERIALES
-    this.agregarTablaMaterialesConfigurable(
-      doc, 
-      materiales, 
-      configuracion, 
-      yDespuesResumen + 10
-    );
-
-    // PIE DE PÁGINA
-    this.agregarPiePagina(doc);
-
-    // DESCARGAR ARCHIVO
-    const nombreArchivo = `Reporte_Materiales_${configuracion.tipoReporte || 'completo'}_${this.obtenerFechaFormateada()}.pdf`;
-    doc.save(nombreArchivo);
-
-    console.log(`Reporte PDF generado: ${nombreArchivo}`);
-    return true;
-  } catch (error) {
-    console.error("Error al generar reporte PDF de materiales:", error);
-    throw new Error("No se pudo generar el reporte PDF de materiales");
-  }
-}
-
-// RESUMEN EJECUTIVO ESPECÍFICO PARA MATERIALES
-agregarResumenEjecutivoMateriales(doc, estadisticas, totalMateriales, configuracion) {
-  let yPosition = 85;
-
-  doc.setFont("Arial", "bold");
-  doc.setFontSize(14);
-  doc.setTextColor(19, 31, 43);
-  doc.text("RESUMEN EJECUTIVO", 20, yPosition);
-
-  yPosition += 12;
-  doc.setFont("Arial", "normal");
-  doc.setFontSize(11);
-  doc.setTextColor(0, 0, 0);
-
-  // ESTADÍSTICAS PRINCIPALES
-  const resumenTexto = [
-    `Total de materiales en el reporte: ${totalMateriales}`,
-    `Materiales con stock crítico: ${estadisticas.stockCritico || 0}`,
-    `Materiales con stock bajo: ${estadisticas.stockBajo || 0}`,
-    `Materiales con stock normal: ${estadisticas.stockNormal || 0}`,
-  ];
-
-  // Agregar información del filtro aplicado
-  if (configuracion.tipoReporte) {
-    resumenTexto.push(`Tipo de reporte: ${this.obtenerDescripcionTipoReporteMateriales(configuracion.tipoReporte)}`);
-  }
-
-  resumenTexto.forEach((texto) => {
-    doc.text("• " + texto, 25, yPosition);
-    yPosition += 7;
-  });
-
-  return yPosition;
-}
-
-// TABLA DE MATERIALES CONFIGURABLE
-agregarTablaMaterialesConfigurable(doc, materiales, configuracion, startY) {
-  // CONSTRUIR COLUMNAS DINÁMICAMENTE
-  let columnas = ["Material"];
-  
-  // Agregar columnas de detalles si está habilitado
-  if (configuracion.incluirDetalles) {
-    columnas.push("Descripción");
-  }
-  
-  // Siempre incluir medida, stock y estado
-  columnas.push("Medida", "Stock Actual", "Stock Mínimo", "Estado Stock");
-  
-  // Agregar fechas solo si está habilitado
-  if (configuracion.incluirFechas) {
-    columnas.push("Fecha Ingreso", "Última Actualización");
-  }
-
-  // CONSTRUIR FILAS DINÁMICAMENTE SEGÚN LAS COLUMNAS
-  const filas = materiales.map((material) => {
-    const estadoStock = this.determinarEstadoStock(
-      material.cantidadActual,
-      material.cantidadMinima
-    );
-
-    // Construir fila paso a paso según las columnas definidas
-    let fila = [];
-    
-    // Siempre agregar material
-    fila.push(material.nombre);
-    
-    // Agregar descripción solo si está configurado
-    if (configuracion.incluirDetalles) {
-      fila.push(material.descripcion || "Sin descripción");
-    }
-    
-    // Siempre agregar medida, stock y estado
-    fila.push(material.medida || "No definida");
-    fila.push(material.cantidadActual.toString());
-    fila.push(material.cantidadMinima.toString());
-    fila.push(estadoStock.texto);
-    
-    // Agregar fechas solo si está configurado
-    if (configuracion.incluirFechas) {
-      fila.push(this.formatearFecha(material.fechaIngreso));
-      fila.push(this.formatearFecha(material.fechaActualizacion));
-    }
-
-    return fila;
-  });
-
-  // CALCULAR ESTILOS DE COLUMNA DINÁMICAMENTE
-  const columnStyles = this.calcularAnchoColumnasMateriales(configuracion);
-
-  // GENERAR TABLA
-  autoTable(doc, {
-    startY: startY,
-    head: [columnas],
-    body: filas,
-    styles: {
-      fontSize: configuracion.incluirDetalles ? 7 : 8,
-      cellPadding: 2,
-      font: "Arial",
-      textColor: [0, 0, 0],
-      lineColor: [200, 200, 200],
-      lineWidth: 0.1,
-    },
-    headStyles: {
-      fillColor: [19, 31, 43],
-      textColor: [255, 255, 255],
-      fontStyle: "bold",
-      fontSize: configuracion.incluirDetalles ? 8 : 9,
-      font: "Arial",
-    },
-    alternateRowStyles: {
-      fillColor: [248, 250, 252],
-    },
-    columnStyles: columnStyles,
-    didParseCell: function (data) {
-      // Encontrar índice del estado de stock dinámicamente
-      const estadoStockIndex = columnas.indexOf("Estado Stock");
-
-      // COLOREAR ESTADO DE STOCK
-      if (data.section === "body" && data.column.index === estadoStockIndex) {
-        const estadoStock = data.cell.text[0];
-        if (estadoStock === "Stock Crítico") {
-          data.cell.styles.fillColor = [254, 215, 215];
-          data.cell.styles.textColor = [185, 28, 28];
-          data.cell.styles.fontStyle = "bold";
-        } else if (estadoStock === "Stock Bajo") {
-          data.cell.styles.fillColor = [254, 235, 200];
-          data.cell.styles.textColor = [154, 52, 18];
-          data.cell.styles.fontStyle = "bold";
-        } else {
-          data.cell.styles.fillColor = [198, 246, 213];
-          data.cell.styles.textColor = [21, 128, 61];
-          data.cell.styles.fontStyle = "bold";
-        }
+      // Determinar título según configuración
+      let tituloReporte = "REPORTE DE INVENTARIO DE MATERIALES";
+      if (configuracion.tipoReporte === "por-stock") {
+        const nivelTexto =
+          configuracion.nivelStockSeleccionado === "critico"
+            ? "CRÍTICO"
+            : configuracion.nivelStockSeleccionado === "bajo"
+            ? "BAJO"
+            : "NORMAL";
+        tituloReporte = `REPORTE DE MATERIALES - STOCK ${nivelTexto}`;
       }
-    },
-    margin: { left: 20, right: 20 },
-    theme: "striped",
-    showHead: "everyPage",
-  });
-}
 
-// CALCULAR ANCHOS DE COLUMNA PARA MATERIALES
-calcularAnchoColumnasMateriales(configuracion) {
-  const columnStyles = {};
-  let currentIndex = 0;
-  
-  if (configuracion.incluirDetalles && configuracion.incluirFechas) {
-    // Tabla completa (8 columnas)
-    columnStyles[currentIndex++] = { cellWidth: 25 }; // Material
-    columnStyles[currentIndex++] = { cellWidth: 30 }; // Descripción
-    columnStyles[currentIndex++] = { cellWidth: 18 }; // Medida
-    columnStyles[currentIndex++] = { cellWidth: 15, halign: "center" }; // Stock Actual
-    columnStyles[currentIndex++] = { cellWidth: 15, halign: "center" }; // Stock Mínimo
-    columnStyles[currentIndex++] = { cellWidth: 22, halign: "center" }; // Estado Stock
-    columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" }; // Fecha Ingreso
-    columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Última Actualización
-    
-  } else if (configuracion.incluirDetalles && !configuracion.incluirFechas) {
-    // Con detalles, sin fechas (6 columnas)
-    columnStyles[currentIndex++] = { cellWidth: 35 }; // Material
-    columnStyles[currentIndex++] = { cellWidth: 40 }; // Descripción
-    columnStyles[currentIndex++] = { cellWidth: 25 }; // Medida
-    columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" }; // Stock Actual
-    columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" }; // Stock Mínimo
-    columnStyles[currentIndex++] = { cellWidth: 30, halign: "center" }; // Estado Stock
-    
-  } else if (!configuracion.incluirDetalles && configuracion.incluirFechas) {
-    // Sin detalles, con fechas (7 columnas)
-    columnStyles[currentIndex++] = { cellWidth: 30 }; // Material
-    columnStyles[currentIndex++] = { cellWidth: 22 }; // Medida
-    columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // Stock Actual
-    columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // Stock Mínimo
-    columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Estado Stock
-    columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Fecha Ingreso
-    columnStyles[currentIndex++] = { cellWidth: 32, halign: "center" }; // Última Actualización
-    
-  } else {
-    // Tabla básica (5 columnas)
-    columnStyles[currentIndex++] = { cellWidth: 40 }; // Material
-    columnStyles[currentIndex++] = { cellWidth: 30 }; // Medida
-    columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Stock Actual
-    columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Stock Mínimo
-    columnStyles[currentIndex++] = { cellWidth: 50, halign: "center" }; // Estado Stock
+      // ENCABEZADO ESTÁNDAR
+      this.agregarEncabezadoEstandar(
+        doc,
+        tituloReporte,
+        configuracion.nivelStockSeleccionado === "critico"
+      );
+
+      // RESUMEN EJECUTIVO PARA MATERIALES
+      const yDespuesResumen = this.agregarResumenEjecutivoMateriales(
+        doc,
+        estadisticas,
+        materiales.length,
+        configuracion
+      );
+
+      // TABLA DE MATERIALES
+      this.agregarTablaMaterialesConfigurable(
+        doc,
+        materiales,
+        configuracion,
+        yDespuesResumen + 10
+      );
+
+      // PIE DE PÁGINA
+      this.agregarPiePagina(doc);
+
+      // DESCARGAR ARCHIVO
+      const nombreArchivo = `Reporte_Materiales_${
+        configuracion.tipoReporte || "completo"
+      }_${this.obtenerFechaFormateada()}.pdf`;
+      doc.save(nombreArchivo);
+
+      console.log(`Reporte PDF generado: ${nombreArchivo}`);
+      return true;
+    } catch (error) {
+      console.error("Error al generar reporte PDF de materiales:", error);
+      throw new Error("No se pudo generar el reporte PDF de materiales");
+    }
   }
 
-  return columnStyles;
-}
+  // RESUMEN EJECUTIVO ESPECÍFICO PARA MATERIALES
+  agregarResumenEjecutivoMateriales(
+    doc,
+    estadisticas,
+    totalMateriales,
+    configuracion
+  ) {
+    let yPosition = 85;
 
-// OBTENER DESCRIPCIÓN DE TIPO DE REPORTE PARA MATERIALES
-obtenerDescripcionTipoReporteMateriales(tipo) {
-  switch (tipo) {
-    case "completo":
-      return "Reporte completo de inventario";
-    case "por-stock":
-      return "Filtrado por nivel de stock";
-    default:
-      return "Reporte personalizado";
+    doc.setFont("Arial", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(19, 31, 43);
+    doc.text("RESUMEN EJECUTIVO", 20, yPosition);
+
+    yPosition += 12;
+    doc.setFont("Arial", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+
+    // ESTADÍSTICAS PRINCIPALES
+    const resumenTexto = [
+      `Total de materiales en el reporte: ${totalMateriales}`,
+      `Materiales con stock crítico: ${estadisticas.stockCritico || 0}`,
+      `Materiales con stock bajo: ${estadisticas.stockBajo || 0}`,
+      `Materiales con stock normal: ${estadisticas.stockNormal || 0}`,
+    ];
+
+    // Agregar información del filtro aplicado
+    if (configuracion.tipoReporte) {
+      resumenTexto.push(
+        `Tipo de reporte: ${this.obtenerDescripcionTipoReporteMateriales(
+          configuracion.tipoReporte
+        )}`
+      );
+    }
+
+    resumenTexto.forEach((texto) => {
+      doc.text("• " + texto, 25, yPosition);
+      yPosition += 7;
+    });
+
+    return yPosition;
   }
-}
+
+  // TABLA DE MATERIALES CONFIGURABLE
+  agregarTablaMaterialesConfigurable(doc, materiales, configuracion, startY) {
+    // CONSTRUIR COLUMNAS DINÁMICAMENTE
+    let columnas = ["Material"];
+
+    // Agregar columnas de detalles si está habilitado
+    if (configuracion.incluirDetalles) {
+      columnas.push("Descripción");
+    }
+
+    // Siempre incluir medida, stock y estado
+    columnas.push("Medida", "Stock Actual", "Stock Mínimo", "Estado Stock");
+
+    // Agregar fechas solo si está habilitado
+    if (configuracion.incluirFechas) {
+      columnas.push("Fecha Ingreso", "Última Actualización");
+    }
+
+    // CONSTRUIR FILAS DINÁMICAMENTE SEGÚN LAS COLUMNAS
+    const filas = materiales.map((material) => {
+      const estadoStock = this.determinarEstadoStock(
+        material.cantidadActual,
+        material.cantidadMinima
+      );
+
+      // Construir fila paso a paso según las columnas definidas
+      let fila = [];
+
+      // Siempre agregar material
+      fila.push(material.nombre);
+
+      // Agregar descripción solo si está configurado
+      if (configuracion.incluirDetalles) {
+        fila.push(material.descripcion || "Sin descripción");
+      }
+
+      // Siempre agregar medida, stock y estado
+      fila.push(material.medida || "No definida");
+      fila.push(material.cantidadActual.toString());
+      fila.push(material.cantidadMinima.toString());
+      fila.push(estadoStock.texto);
+
+      // Agregar fechas solo si está configurado
+      if (configuracion.incluirFechas) {
+        fila.push(this.formatearFecha(material.fechaIngreso));
+        fila.push(this.formatearFecha(material.fechaActualizacion));
+      }
+
+      return fila;
+    });
+
+    // CALCULAR ESTILOS DE COLUMNA DINÁMICAMENTE
+    const columnStyles = this.calcularAnchoColumnasMateriales(configuracion);
+
+    // GENERAR TABLA
+    autoTable(doc, {
+      startY: startY,
+      head: [columnas],
+      body: filas,
+      styles: {
+        fontSize: configuracion.incluirDetalles ? 7 : 8,
+        cellPadding: 2,
+        font: "Arial",
+        textColor: [0, 0, 0],
+        lineColor: [200, 200, 200],
+        lineWidth: 0.1,
+      },
+      headStyles: {
+        fillColor: [19, 31, 43],
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+        fontSize: configuracion.incluirDetalles ? 8 : 9,
+        font: "Arial",
+      },
+      alternateRowStyles: {
+        fillColor: [248, 250, 252],
+      },
+      columnStyles: columnStyles,
+      didParseCell: function (data) {
+        // Encontrar índice del estado de stock dinámicamente
+        const estadoStockIndex = columnas.indexOf("Estado Stock");
+
+        // COLOREAR ESTADO DE STOCK
+        if (data.section === "body" && data.column.index === estadoStockIndex) {
+          const estadoStock = data.cell.text[0];
+          if (estadoStock === "Stock Crítico") {
+            data.cell.styles.fillColor = [254, 215, 215];
+            data.cell.styles.textColor = [185, 28, 28];
+            data.cell.styles.fontStyle = "bold";
+          } else if (estadoStock === "Stock Bajo") {
+            data.cell.styles.fillColor = [254, 235, 200];
+            data.cell.styles.textColor = [154, 52, 18];
+            data.cell.styles.fontStyle = "bold";
+          } else {
+            data.cell.styles.fillColor = [198, 246, 213];
+            data.cell.styles.textColor = [21, 128, 61];
+            data.cell.styles.fontStyle = "bold";
+          }
+        }
+      },
+      margin: { left: 20, right: 20 },
+      theme: "striped",
+      showHead: "everyPage",
+    });
+  }
+
+  // CALCULAR ANCHOS DE COLUMNA PARA MATERIALES
+  calcularAnchoColumnasMateriales(configuracion) {
+    const columnStyles = {};
+    let currentIndex = 0;
+
+    if (configuracion.incluirDetalles && configuracion.incluirFechas) {
+      // Tabla completa (8 columnas)
+      columnStyles[currentIndex++] = { cellWidth: 25 }; // Material
+      columnStyles[currentIndex++] = { cellWidth: 30 }; // Descripción
+      columnStyles[currentIndex++] = { cellWidth: 18 }; // Medida
+      columnStyles[currentIndex++] = { cellWidth: 15, halign: "center" }; // Stock Actual
+      columnStyles[currentIndex++] = { cellWidth: 15, halign: "center" }; // Stock Mínimo
+      columnStyles[currentIndex++] = { cellWidth: 22, halign: "center" }; // Estado Stock
+      columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" }; // Fecha Ingreso
+      columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Última Actualización
+    } else if (configuracion.incluirDetalles && !configuracion.incluirFechas) {
+      // Con detalles, sin fechas (6 columnas)
+      columnStyles[currentIndex++] = { cellWidth: 35 }; // Material
+      columnStyles[currentIndex++] = { cellWidth: 40 }; // Descripción
+      columnStyles[currentIndex++] = { cellWidth: 25 }; // Medida
+      columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" }; // Stock Actual
+      columnStyles[currentIndex++] = { cellWidth: 20, halign: "center" }; // Stock Mínimo
+      columnStyles[currentIndex++] = { cellWidth: 30, halign: "center" }; // Estado Stock
+    } else if (!configuracion.incluirDetalles && configuracion.incluirFechas) {
+      // Sin detalles, con fechas (7 columnas)
+      columnStyles[currentIndex++] = { cellWidth: 30 }; // Material
+      columnStyles[currentIndex++] = { cellWidth: 22 }; // Medida
+      columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // Stock Actual
+      columnStyles[currentIndex++] = { cellWidth: 18, halign: "center" }; // Stock Mínimo
+      columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Estado Stock
+      columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Fecha Ingreso
+      columnStyles[currentIndex++] = { cellWidth: 32, halign: "center" }; // Última Actualización
+    } else {
+      // Tabla básica (5 columnas)
+      columnStyles[currentIndex++] = { cellWidth: 40 }; // Material
+      columnStyles[currentIndex++] = { cellWidth: 30 }; // Medida
+      columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Stock Actual
+      columnStyles[currentIndex++] = { cellWidth: 25, halign: "center" }; // Stock Mínimo
+      columnStyles[currentIndex++] = { cellWidth: 50, halign: "center" }; // Estado Stock
+    }
+
+    return columnStyles;
+  }
+
+  // OBTENER DESCRIPCIÓN DE TIPO DE REPORTE PARA MATERIALES
+  obtenerDescripcionTipoReporteMateriales(tipo) {
+    switch (tipo) {
+      case "completo":
+        return "Reporte completo de inventario";
+      case "por-stock":
+        return "Filtrado por nivel de stock";
+      default:
+        return "Reporte personalizado";
+    }
+  }
 }
 
 export default new ReportesService();
