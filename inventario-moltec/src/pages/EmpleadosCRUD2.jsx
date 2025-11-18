@@ -1019,7 +1019,11 @@ const EmpleadosCRUD = () => {
                         className="crud-input"
                         value={formData.identificacion}
                         onChange={(e) => {
-                          const value = e.target.value;
+                          const rawValue = e.target.value;
+                          // 1. Limpia cualquier caracter que no sea un dígito
+                          const value = rawValue.replace(/\D/g, "");
+
+                          // 2. Limita la longitud a 14 caracteres
                           if (value.length <= 14) {
                             setFormData({ ...formData, identificacion: value });
                           }
@@ -1687,7 +1691,11 @@ const EmpleadosCRUD = () => {
                         className="crud-input"
                         value={formData.identificacion}
                         onChange={(e) => {
-                          const value = e.target.value;
+                          const rawValue = e.target.value;
+                          // 1. Limpia cualquier caracter que no sea un dígito
+                          const value = rawValue.replace(/\D/g, "");
+
+                          // 2. Limita la longitud a 14 caracteres
                           if (value.length <= 14) {
                             setFormData({ ...formData, identificacion: value });
                           }
