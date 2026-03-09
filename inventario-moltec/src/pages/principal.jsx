@@ -39,7 +39,7 @@ import Info2 from "../components/info3";
 import Ubicacion from "../components/ubicacion2";
 import Service from "../components/servicios2";
 import Contacto from "../components/contacto2";
-import Portafolio from "../components/portafolio2";
+import Portafolio from "../components/portafolio3";
 
 /* ============================================
    COMPONENTE PRINCIPAL

@@ -37,3 +37,6 @@ node_modules/
 *.sln
 *.sw?
 Thumbs.db
+
+hashear.js
+testlogin.js

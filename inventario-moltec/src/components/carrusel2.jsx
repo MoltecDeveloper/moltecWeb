@@ -12,19 +12,19 @@ import "./carrusel2.css";
    ============================================ */
 const images = [
   {
-    src: "/imagesCarrusel/carrusel1.png",
+    src: "/imagesCarrusel/carrusel1.webp",
     alt: "Proyecto MOLTEC 1",
   },
   {
-    src: "/imagesCarrusel/carrusel2.png",
+    src: "/imagesCarrusel/carrusel2.webp",
     alt: "Proyecto MOLTEC 2 ",
   },
   {
-    src:"/imagesCarrusel/carrusel3.png",
+    src:"/imagesCarrusel/carrusel3.webp",
     alt: "Proyecto MOLTEC 3",
   },
   {
-    src: "/imagesCarrusel/carrusel4.png",
+    src: "/imagesCarrusel/carrusel4.webp",
     alt: "Proyecto MOLTEC 4",
   },
 ];
