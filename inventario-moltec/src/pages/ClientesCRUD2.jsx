@@ -15,7 +15,7 @@ import {
 import { toast } from "react-toastify";
 import clientesApi from "../services/clienteApi";
 import reportesService from "../services/reportesService";
-import "./CRUDStyles.css";
+import "./CRUDStyles2.css";
 
 const ClientesCRUD = () => {
   const [clientes, setClientes] = useState([]);
@@ -668,7 +668,7 @@ const ClientesCRUD = () => {
                 </div>
                 <div className="crud-info-box crud-modal-full-width">
                   <p
-                    style={{ margin: "0", fontSize: "14px", color: "#2d3748" }}
+                    style={{ margin: "0", fontSize: "14px", color: "#ffffff" }}
                   >
                     💡 <strong>Límites:</strong> Nombre (50 chars), Contacto (35
                     chars), Teléfono (8 dígitos), NIT (9 dígitos)
@@ -815,14 +815,14 @@ const ClientesCRUD = () => {
                     style={{
                       margin: "0 0 8px 0",
                       fontSize: "14px",
-                      color: "#2d3748",
+                      color: "#ffffff",
                     }}
                   >
                     <strong>Fecha de Registro:</strong>{" "}
                     {formatearFecha(clienteSeleccionado?.fechaRegistro)}
                   </p>
                   <p
-                    style={{ margin: "0", fontSize: "12px", color: "#4a5568" }}
+                    style={{ margin: "0", fontSize: "12px", color: "#ffffff" }}
                   >
                     💡 <strong>Límites:</strong> Nombre (50 chars), Contacto (35
                     chars), Teléfono (8 dígitos), NIT (9 dígitos)

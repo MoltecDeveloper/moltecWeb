@@ -14,7 +14,7 @@ import {
 import { toast } from "react-toastify";
 import herramientasApi from "../services/herramientasApi";
 import reportesService from "../services/reportesService";
-import "./CRUDStyles.css";
+import "./CRUDStyles2.css";
 
 const HerramientasCRUD = () => {
   const [herramientas, setHerramientas] = useState([]);
@@ -147,6 +147,40 @@ const HerramientasCRUD = () => {
       return "Fecha inválida";
     }
   };
+  // ── Colores de badge para tema oscuro MOLTEC ─────────────────────────────
+  // Los colores de herramientasApi.getEstadoStock() y getEstadoColor()
+  // vienen con valores del tema claro. Como son estilos inline, ningún CSS
+  // puede sobreescribirlos. Esta función devuelve los colores oscuros correctos.
+
+  // Badge de Stock (igual que Materiales)
+  const getBadgeStock = (texto) => {
+    const t = (texto || "").toLowerCase();
+    if (t.includes("crítico") || t.includes("critico"))
+      return { backgroundColor: "#c53030", color: "#ffffff" };
+    if (t.includes("bajo"))
+      return { backgroundColor: "#c05621", color: "#ffffff" };
+    if (t.includes("normal"))
+      return { backgroundColor: "#276749", color: "#ffffff" };
+    return { backgroundColor: "#553c9a", color: "#ffffff" };
+  };
+
+  // Badge de Estado de Herramienta
+  // Colores basados en la gráfica pie del dashboard (versión oscura para mejor contraste)
+  const getBadgeEstado = (texto) => {
+    const t = (texto || "").toLowerCase();
+    if (t.includes("nuevo"))
+      return { backgroundColor: "#276749", color: "#ffffff" };       // verde oscuro    (gráfica: #48bb78)
+    if (t.includes("buen estado") || t.includes("buen"))
+      return { backgroundColor: "#2b6cb0", color: "#ffffff" };       // azul oscuro     (gráfica: #4299e1)
+    if (t.includes("desgastado"))
+      return { backgroundColor: "#c05621", color: "#ffffff" };       // naranja oscuro  (gráfica: #ed8936)
+    if (t.includes("reparaci") || t.includes("reparacion"))
+      return { backgroundColor: "#b7791f", color: "#ffffff" };       // amarillo oscuro (gráfica: #ecc94b)
+    if (t.includes("baja"))
+      return { backgroundColor: "#c53030", color: "#ffffff" };       // rojo oscuro     (gráfica: #e53e3e)
+    return { backgroundColor: "#2d3748", color: "#ffffff" };
+  };
+
   const formatearFecha = (fecha) => {
     if (!fecha) return "N/A";
     try {
@@ -701,7 +735,7 @@ const HerramientasCRUD = () => {
                         <div>
                           {herramienta.marca && <div>{herramienta.marca}</div>}
                           {herramienta.modelo && (
-                            <small style={{ color: "#718096" }}>
+                            <small style={{ color: "rgba(255,255,255,0.55)" }}>
                               Modelo: {herramienta.modelo}
                             </small>
                           )}
@@ -723,10 +757,7 @@ const HerramientasCRUD = () => {
                     <td className="crud-td">
                       <span
                         className="crud-badge"
-                        style={{
-                          color: estadoStock.color,
-                          backgroundColor: estadoStock.bg,
-                        }}
+                        style={getBadgeStock(estadoStock.texto)}
                       >
                         {estadoStock.texto}
                       </span>
@@ -734,10 +765,7 @@ const HerramientasCRUD = () => {
                     <td className="crud-td">
                       <span
                         className="crud-badge"
-                        style={{
-                          color: estadoHerramienta.color,
-                          backgroundColor: estadoHerramienta.bg,
-                        }}
+                        style={getBadgeEstado(herramienta.estado)}
                       >
                         {herramienta.estado}
                       </span>
@@ -911,7 +939,7 @@ const HerramientasCRUD = () => {
                     margin: "0 0 12px 0",
                     fontSize: "16px",
                     fontWeight: "600",
-                    color: "#2d3748",
+                    color: "#ffffff",
                   }}
                 >
                   Vista Previa del Reporte
@@ -1415,8 +1443,8 @@ const HerramientasCRUD = () => {
                     <div
                       className="crud-input"
                       style={{
-                        backgroundColor: "#f7fafc",
-                        color: "#4a5568",
+                        backgroundColor: "#1a2d3d",
+                        color: "#ffffff",
                         fontWeight: "600",
                         display: "flex",
                         alignItems: "center",
@@ -1441,7 +1469,7 @@ const HerramientasCRUD = () => {
                 </div>
                 <div className="crud-info-box crud-modal-full-width">
                   <p
-                    style={{ margin: "0", fontSize: "14px", color: "#2d3748" }}
+                    style={{ margin: "0", fontSize: "14px", color: "#ffffff" }}
                   >
                     <strong>Herramienta seleccionada:</strong>{" "}
                     {herramientaSeleccionada?.nombre}
@@ -1487,7 +1515,7 @@ const HerramientasCRUD = () => {
                   margin: "0 0 8px 0",
                   fontSize: "18px",
                   fontWeight: "600",
-                  color: "#2d3748",
+                  color: "#ffffff",
                   textAlign: "center",
                 }}
               >
@@ -1497,7 +1525,7 @@ const HerramientasCRUD = () => {
                 style={{
                   margin: "0 0 24px 0",
                   fontSize: "14px",
-                  color: "#718096",
+                  color: "rgba(255,255,255,0.55)",
                   textAlign: "center",
                 }}
               >

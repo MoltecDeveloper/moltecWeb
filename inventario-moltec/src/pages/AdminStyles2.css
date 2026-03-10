@@ -1,0 +1,136 @@
+/* ========================================
+   ADMIN PANEL RESPONSIVE - MOLTEC S.A.
+   Tema Oscuro - Color corporativo #131F2B
+   ======================================== */
+
+/* === VARIABLES DE COLOR ===
+   Toda la paleta en un solo lugar.
+   Si quieres ajustar un color, cámbialo aquí
+   y se aplica en todo el archivo automáticamente.
+   ----------------------------------------
+   --bg-base       : fondo principal (azul marino MOLTEC)
+   --bg-surface    : fondo de tarjetas / paneles
+   --bg-elevated   : fondo de elementos sobre tarjetas
+   --text-primary  : texto principal
+   --text-secondary: subtítulos / texto secundario
+   --text-muted    : placeholders / texto desactivado
+   --accent        : color de acento (morado corporativo)
+   --accent-hover  : acento al pasar el mouse
+   --border        : bordes sutiles
+   --shadow        : sombra adaptada al tema oscuro
+   ======================================== */
+:root {
+  --bg-base:         #131F2B;
+  --bg-surface:      #1a2d3d;
+  --bg-elevated:     #223344;
+  --text-primary:    #ffffff;
+  --text-secondary:  rgba(255, 255, 255, 0.75);
+  --text-muted:      rgba(255, 255, 255, 0.45);
+  --accent:          #667eea;
+  --accent-hover:    #7c91f0;
+  --border:          rgba(255, 255, 255, 0.08);
+  --shadow:          rgba(0, 0, 0, 0.4);
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+  font-family: Arial, sans-serif;
+}
+
+/* === CONTENIDO PRINCIPAL === */
+.admin-main-content {
+  margin-left: 280px;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: var(--bg-base);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+/* Cuando el sidebar está colapsado → el contenido se expande */
+.admin-container:has(.sidebar.collapsed) .admin-main-content {
+  margin-left: 80px;
+}
+
+/* === PANTALLA DE ERROR === */
+.admin-error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--bg-base);
+  font-family: Arial, sans-serif;
+  color: var(--text-primary);
+}
+
+/* === SECCIÓN DE CONTENIDO === */
+.admin-content-section {
+  background-color: var(--bg-surface);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 24px var(--shadow);
+  border: 1px solid var(--border);
+  min-height: calc(100vh - 40px);
+  color: var(--text-primary);
+}
+
+/* === TÍTULO DE SECCIÓN === */
+.admin-section-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 10px;
+}
+
+/* === TARJETA SOLO ADMIN === */
+.admin-only-card {
+  background-color: var(--bg-elevated);
+  padding: 30px;
+  border-radius: 12px;
+  border: 2px solid var(--accent);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .admin-main-content {
+    margin-left: 0;
+    padding: 80px 15px 20px 15px;
+  }
+
+  .admin-container:has(.sidebar.collapsed) .admin-main-content {
+    margin-left: 0;
+  }
+
+  .admin-content-section {
+    padding: 20px;
+  }
+
+  .admin-section-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-main-content {
+    padding: 70px 10px 15px 10px;
+  }
+
+  .admin-content-section {
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .admin-section-title {
+    font-size: 20px;
+  }
+}

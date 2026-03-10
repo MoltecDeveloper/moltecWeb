@@ -194,16 +194,17 @@ class BitacoraAPI {
 
   // 🎨 OBTENER COLOR PARA TIPO DE EVENTO (helper para UI)
   getColorTipoEvento(descripcion) {
-    if (!descripcion) return { color: "#718096", bg: "#e2e8f0" };
+    // Colores oscuros para tema MOLTEC — fondo sólido + texto blanco
+    if (!descripcion) return { color: "#ffffff", bg: "#2d3748" };
 
     const colores = {
-      CREADO: { color: "#38a169", bg: "#c6f6d5" },
-      ACTUALIZADO: { color: "#3182ce", bg: "#bee3f8" },
-      ELIMINADO: { color: "#e53e3e", bg: "#fed7d7" },
-      INGRESO: { color: "#38a169", bg: "#c6f6d5" },
-      SALIDA: { color: "#dd6b20", bg: "#feebc8" },
-      LOGIN: { color: "#805ad5", bg: "#e9d8fd" },
-      LOGOUT: { color: "#718096", bg: "#e2e8f0" },
+      CREADO:      { color: "#ffffff", bg: "#276749" },  // verde oscuro
+      ACTUALIZADO: { color: "#ffffff", bg: "#2b6cb0" },  // azul oscuro
+      ELIMINADO:   { color: "#ffffff", bg: "#c53030" },  // rojo oscuro
+      INGRESO:     { color: "#ffffff", bg: "#276749" },  // verde oscuro
+      SALIDA:      { color: "#ffffff", bg: "#c05621" },  // naranja oscuro
+      LOGIN:       { color: "#ffffff", bg: "#553c9a" },  // morado oscuro
+      LOGOUT:      { color: "#ffffff", bg: "#4a5568" },  // gris oscuro
     };
 
     // Buscar coincidencias en la descripción
@@ -213,7 +214,7 @@ class BitacoraAPI {
       }
     }
 
-    return { color: "#718096", bg: "#e2e8f0" };
+    return { color: "#ffffff", bg: "#2d3748" };
   }
 
   // 📄 EXPORTAR BITÁCORA A CSV - SIMPLIFICADO

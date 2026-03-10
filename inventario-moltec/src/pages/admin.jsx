@@ -337,7 +337,7 @@ import ProyectosCRUD from '../pages/ProyectosCRUD2';
 import DashboardStats from '../pages/DashboardStats2';
 import BitacoraCRUD from '../pages/Bitacora2';
 import { toast } from 'react-toastify';
-import './AdminStyles.css';
+import './AdminStyles2.css';
 
 const Admin = () => {
   const [activeSection, setActiveSection] = useState('dashboard');

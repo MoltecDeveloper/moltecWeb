@@ -239,12 +239,18 @@ class DashboardAPI {
           labels: {
             padding: 20,
             usePointStyle: true,
+            color: '#ffffff',        // ← texto de leyenda en blanco
             font: {
               size: 12
             }
           }
         },
         tooltip: {
+          backgroundColor: '#1a2d3d',   // ← fondo del tooltip oscuro
+          titleColor: '#ffffff',         // ← título del tooltip blanco
+          bodyColor: '#ffffff',          // ← texto del tooltip blanco
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
           callbacks: {
             // Muestra el valor y porcentaje en el tooltip
             label: function(context) {
@@ -271,23 +277,39 @@ class DashboardAPI {
         title: {
           display: true,
           text: titulo,
+          color: '#ffffff',        // ← título en blanco
           font: {
             size: 14,
             weight: 'bold'
           }
+        },
+        tooltip: {
+          backgroundColor: '#1a2d3d',
+          titleColor: '#ffffff',
+          bodyColor: '#ffffff',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
         }
       },
       scales: {
         y: {
           beginAtZero: true,
           ticks: {
-            stepSize: 1
+            stepSize: 1,
+            color: '#ffffff',      // ← números eje Y en blanco
+          },
+          grid: {
+            color: 'rgba(255,255,255,0.08)',  // ← líneas de grid sutiles
           }
         },
         x: {
           ticks: {
             maxRotation: 45,
-            minRotation: 0
+            minRotation: 0,
+            color: '#ffffff',      // ← etiquetas eje X en blanco
+          },
+          grid: {
+            color: 'rgba(255,255,255,0.08)',
           }
         }
       }

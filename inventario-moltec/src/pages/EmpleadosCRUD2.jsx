@@ -16,7 +16,7 @@ import {
 import { toast } from "react-toastify";
 import empleadosApi from "../services/empleadosApi";
 import reportesService from "../services/reportesService";
-import "./CRUDStyles.css";
+import "./CRUDStyles2.css";
 
 const EmpleadosCRUD = () => {
   const [empleados, setEmpleados] = useState([]);
@@ -124,6 +124,20 @@ const EmpleadosCRUD = () => {
       fechaContratacionHasta: "",
     });
   };
+  // Badge de Estado de Empleado — colores oscuros para tema MOLTEC
+  const getBadgeEstadoEmpleado = (status) => {
+    const s = (status || "").toLowerCase();
+    if (s.includes("activo") && !s.includes("inactivo"))
+      return { backgroundColor: "#276749", color: "#ffffff" };
+    if (s.includes("inactivo"))
+      return { backgroundColor: "#c53030", color: "#ffffff" };
+    if (s.includes("vacacion"))
+      return { backgroundColor: "#2b6cb0", color: "#ffffff" };
+    if (s.includes("licencia"))
+      return { backgroundColor: "#b7791f", color: "#ffffff" };
+    return { backgroundColor: "#2d3748", color: "#ffffff" };
+  };
+
   const formatearFechaLocal = (fechaString) => {
     if (!fechaString) return "N/A";
     try {
@@ -586,23 +600,23 @@ const EmpleadosCRUD = () => {
                         <strong
                           style={{
                             cursor: "pointer",
-                            color: "#2d3748",
+                            color: "#ffffff",
                             textDecoration: "none",
                             transition: "color 0.2s",
                           }}
                           onClick={() => abrirModalPerfil(empleado)}
                           onMouseEnter={(e) =>
-                            (e.target.style.color = "#4299e1")
+                            e.currentTarget.style.setProperty("color", "#4299e1", "important")
                           }
                           onMouseLeave={(e) =>
-                            (e.target.style.color = "#2d3748")
+                            e.currentTarget.style.setProperty("color", "#ffffff", "important")
                           }
                           title="Ver perfil completo"
                         >
                           {empleado.nombre} {empleado.apellido}
                         </strong>
                         {empleado.fechaNacimiento && (
-                          <small style={{ color: "#718096", fontSize: "12px" }}>
+                          <small style={{ color: "rgba(255,255,255,0.55)", fontSize: "12px" }}>
                             Nac:{" "}
                             {empleadosApi.formatearFecha(
                               empleado.fechaNacimiento
@@ -615,7 +629,7 @@ const EmpleadosCRUD = () => {
                       {empleado.identificacion || (
                         <span
                           style={{
-                            color: "#a0aec0",
+                            color: "rgba(255,255,255,0.4)",
                             fontStyle: "italic",
                             fontSize: "13px",
                           }}
@@ -627,8 +641,8 @@ const EmpleadosCRUD = () => {
                     <td className="crud-td">
                       <span
                         style={{
-                          backgroundColor: "#e6f3ff",
-                          color: "#3182ce",
+                          backgroundColor: "#2b6cb0",
+                          color: "#ffffff",
                           padding: "4px 8px",
                           borderRadius: "12px",
                           fontSize: "12px",
@@ -655,7 +669,7 @@ const EmpleadosCRUD = () => {
                       ) : (
                         <span
                           style={{
-                            color: "#a0aec0",
+                            color: "rgba(255,255,255,0.4)",
                             fontStyle: "italic",
                             fontSize: "13px",
                           }}
@@ -682,7 +696,7 @@ const EmpleadosCRUD = () => {
                       ) : (
                         <span
                           style={{
-                            color: "#a0aec0",
+                            color: "rgba(255,255,255,0.4)",
                             fontStyle: "italic",
                             fontSize: "13px",
                           }}
@@ -694,8 +708,8 @@ const EmpleadosCRUD = () => {
                     <td className="crud-td">
                       <span
                         style={{
-                          backgroundColor: "#f0fff4",
-                          color: "#2d5016",
+                          backgroundColor: "#276749",
+                          color: "#ffffff",
                           padding: "2px 6px",
                           borderRadius: "8px",
                           fontSize: "12px",
@@ -711,10 +725,7 @@ const EmpleadosCRUD = () => {
                     <td className="crud-td">
                       <span
                         className="crud-badge"
-                        style={{
-                          color: estado.color,
-                          backgroundColor: estado.bg,
-                        }}
+                        style={getBadgeEstadoEmpleado(empleado.status)}
                       >
                         {estado.icon} {estado.texto}
                       </span>
@@ -859,7 +870,7 @@ const EmpleadosCRUD = () => {
                     margin: "0 0 12px 0",
                     fontSize: "16px",
                     fontWeight: "600",
-                    color: "#2d3748",
+                    color: "#ffffff",
                   }}
                 >
                   Vista Previa del Reporte
@@ -1240,7 +1251,7 @@ const EmpleadosCRUD = () => {
                 style={{
                   width: "60px",
                   height: "60px",
-                  backgroundColor: "rgba(255, 255, 255, 1)",
+                  backgroundColor: "#1a2d3d",
                   borderRadius: "50%",
                   display: "flex",
                   alignItems: "center",
@@ -1283,7 +1294,7 @@ const EmpleadosCRUD = () => {
             >
               <div
                 style={{
-                  backgroundColor: "#f9fafb",
+                  backgroundColor: "#1a2d3d",
                   padding: "15px",
                   borderRadius: "12px",
                   border: "1px solid #e2e8f0",
@@ -1293,7 +1304,7 @@ const EmpleadosCRUD = () => {
                   style={{
                     fontSize: "16px",
                     fontWeight: "700",
-                    color: "#2d3748",
+                    color: "#ffffff",
                     marginBottom: "12px",
                   }}
                 >
@@ -1314,10 +1325,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Nombre Completo:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.nombre} {empleadoPerfil.apellido}
                     </span>
                   </div>
@@ -1329,10 +1340,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Fecha de Nacimiento:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.fechaNacimiento
                         ? empleadosApi.formatearFecha(
                             empleadoPerfil.fechaNacimiento
@@ -1348,10 +1359,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Identificación:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.identificacion || "No registrada"}
                     </span>
                   </div>
@@ -1359,7 +1370,7 @@ const EmpleadosCRUD = () => {
               </div>
               <div
                 style={{
-                  backgroundColor: "#f9fafb",
+                  backgroundColor: "#1a2d3d",
                   padding: "15px",
                   borderRadius: "12px",
                   border: "1px solid #e2e8f0",
@@ -1369,7 +1380,7 @@ const EmpleadosCRUD = () => {
                   style={{
                     fontSize: "16px",
                     fontWeight: "700",
-                    color: "#2d3748",
+                    color: "#ffffff",
                     marginBottom: "12px",
                   }}
                 >
@@ -1390,10 +1401,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Puesto:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.puestoNombre}
                     </span>
                   </div>
@@ -1405,10 +1416,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Fecha de Contratación:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.fechaContratacion
                         ? empleadosApi.formatearFecha(
                             empleadoPerfil.fechaContratacion
@@ -1425,7 +1436,7 @@ const EmpleadosCRUD = () => {
                         fontSize: "14px",
                       }}
                     >
-                      <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                      <span style={{ fontWeight: "600", color: "#ffffff" }}>
                         Fecha de Finalización:
                       </span>
                       <span style={{ color: "#e53e3e", fontWeight: "400" }}>
@@ -1443,10 +1454,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Antigüedad:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadosApi.calcularAntiguedad(
                         empleadoPerfil.fechaContratacion,
                         empleadoPerfil.fechaFinalizacion
@@ -1457,7 +1468,7 @@ const EmpleadosCRUD = () => {
               </div>
               <div
                 style={{
-                  backgroundColor: "#f9fafb",
+                  backgroundColor: "#1a2d3d",
                   padding: "15px",
                   borderRadius: "12px",
                   border: "1px solid #e2e8f0",
@@ -1467,7 +1478,7 @@ const EmpleadosCRUD = () => {
                   style={{
                     fontSize: "16px",
                     fontWeight: "700",
-                    color: "#2d3748",
+                    color: "#ffffff",
                     marginBottom: "12px",
                   }}
                 >
@@ -1488,10 +1499,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Teléfono Principal:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.telefono
                         ? empleadosApi.formatearTelefono(
                             empleadoPerfil.telefono
@@ -1507,10 +1518,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Teléfono Secundario:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.telefono2
                         ? empleadosApi.formatearTelefono(
                             empleadoPerfil.telefono2
@@ -1526,10 +1537,10 @@ const EmpleadosCRUD = () => {
                       fontSize: "14px",
                     }}
                   >
-                    <span style={{ fontWeight: "600", color: "#4a5568" }}>
+                    <span style={{ fontWeight: "600", color: "#ffffff" }}>
                       Número de Emergencia:
                     </span>
-                    <span style={{ color: "#2d3748", fontWeight: "400" }}>
+                    <span style={{ color: "#ffffff", fontWeight: "400" }}>
                       {empleadoPerfil.numeroEmergencia
                         ? empleadosApi.formatearTelefono(
                             empleadoPerfil.numeroEmergencia
@@ -1865,7 +1876,7 @@ const EmpleadosCRUD = () => {
                 </div>
                 <div className="crud-info-box crud-modal-full-width">
                   <p
-                    style={{ margin: "0", fontSize: "14px", color: "#2d3748" }}
+                    style={{ margin: "0", fontSize: "14px", color: "#ffffff" }}
                   >
                     <strong>Empleado:</strong> {empleadoSeleccionado?.nombre}{" "}
                     {empleadoSeleccionado?.apellido}
@@ -1874,7 +1885,7 @@ const EmpleadosCRUD = () => {
                     style={{
                       margin: "0",
                       fontSize: "12px",
-                      color: "#4a5568",
+                      color: "#ffffff",
                       marginTop: "5px",
                     }}
                   >

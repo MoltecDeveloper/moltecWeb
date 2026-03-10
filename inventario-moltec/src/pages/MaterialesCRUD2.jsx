@@ -13,7 +13,7 @@ import {
 import { toast } from "react-toastify";
 import materialesApi from "../services/materialesApi";
 import reportesService from "../services/reportesService";
-import "./CRUDStyles.css";
+import "./CRUDStyles2.css";
 
 const MaterialesCRUD = () => {
   const [materiales, setMateriales] = useState([]);
@@ -300,6 +300,20 @@ const MaterialesCRUD = () => {
     // if (cantidadActual <= cantidadMinima * 2) return "bajo";
     // return "normal";
   };
+  // Colores de badge adaptados al tema oscuro de MOLTEC.
+  // Sobreescribe los colores inline que devuelve materialesApi.getEstadoStock()
+  // ya que los estilos inline tienen mayor prioridad que cualquier clase CSS.
+  const getBadgeEstiloOscuro = (texto) => {
+    const t = (texto || "").toLowerCase();
+    if (t.includes("crítico") || t.includes("critico"))
+      return { backgroundColor: "#c53030", color: "#ffffff" }; // rojo sólido
+    if (t.includes("bajo"))
+      return { backgroundColor: "#c05621", color: "#ffffff" }; // naranja sólido
+    if (t.includes("normal"))
+      return { backgroundColor: "#276749", color: "#ffffff" }; // verde sólido
+    return { backgroundColor: "#553c9a", color: "#ffffff" };   // fallback morado
+  };
+
   const formatearFechaLocal = (fechaString) => {
     if (!fechaString) return "N/A";
     try {
@@ -602,10 +616,7 @@ const MaterialesCRUD = () => {
                     <td>
                       <span
                         className="crud-badge"
-                        style={{
-                          color: estado.color,
-                          backgroundColor: estado.bg,
-                        }}
+                        style={getBadgeEstiloOscuro(estado.texto)}
                       >
                         {estado.icon} {estado.texto}
                       </span>
@@ -616,24 +627,28 @@ const MaterialesCRUD = () => {
                       <div className="crud-table-actions">
                         <button
                           className="crud-btn crud-btn-icon crud-btn-primary"
+                          title="Ingreso de Stock"
                           onClick={() => abrirModalStock(material, "ingreso")}
                         >
                           <ArrowUp size={16} />
                         </button>
                         <button
                           className="crud-btn crud-btn-icon crud-btn-warning"
+                          title="Salida de Stock"
                           onClick={() => abrirModalStock(material, "salida")}
                         >
                           <ArrowDown size={16} />
                         </button>
                         <button
                           className="crud-btn crud-btn-icon crud-btn-secondary"
+                          title="Editar"
                           onClick={() => abrirModalEditar(material)}
                         >
                           <Edit size={16} />
                         </button>
                         <button
                           className="crud-btn crud-btn-icon crud-btn-danger"
+                          title="Eliminar"
                           onClick={() => eliminarMaterial(material)}
                         >
                           <Trash2 size={16} />
@@ -938,8 +953,8 @@ const MaterialesCRUD = () => {
                     <div
                       className="crud-input"
                       style={{
-                        backgroundColor: "#f7fafc",
-                        color: "#4a5568",
+                        backgroundColor: "#1a2d3d",
+                        color: "#ffffff",
                         fontWeight: "600",
                         display: "flex",
                         alignItems: "center",
@@ -953,7 +968,7 @@ const MaterialesCRUD = () => {
                     <p
                       style={{
                         fontSize: "12px",
-                        color: "#666",
+                        color: "#ece9e9",
                         margin: "4px 0 0 0",
                         fontStyle: "italic",
                       }}
@@ -969,7 +984,7 @@ const MaterialesCRUD = () => {
                       style={{
                         margin: "0",
                         fontSize: "14px",
-                        color: "#2d3748",
+                        color: "#ffffff",
                       }}
                     >
                       <strong>Material seleccionado:</strong>{" "}
@@ -1017,7 +1032,7 @@ const MaterialesCRUD = () => {
                   margin: "0 0 8px 0",
                   fontSize: "18px",
                   fontWeight: "600",
-                  color: "#2d3748",
+                  color: "#ffffff",
                   textAlign: "center",
                 }}
               >
@@ -1027,7 +1042,7 @@ const MaterialesCRUD = () => {
                 style={{
                   margin: "0 0 24px 0",
                   fontSize: "14px",
-                  color: "#718096",
+                  color: "rgba(255,255,255,0.55)",
                   textAlign: "center",
                 }}
               >
@@ -1214,7 +1229,7 @@ const MaterialesCRUD = () => {
                       margin: "0 0 12px 0",
                       fontSize: "16px",
                       fontWeight: "600",
-                      color: "#2d3748",
+                      color: "#ffffff",
                     }}
                   >
                     Vista Previa del Reporte

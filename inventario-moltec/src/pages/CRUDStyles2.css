@@ -1,0 +1,927 @@
+/* ========================================
+   ESTILOS GLOBALES PARA CRUDS - MOLTEC S.A.
+   Tema Oscuro - Color corporativo #131F2B
+   Responsive: Mobile, Tablet, Desktop
+   ======================================== */
+
+/* === VARIABLES CSS === */
+:root {
+  /* ── Colores funcionales (se mantienen para badges y estados) ── */
+  --color-primary:   #48bb78;   /* verde  */
+  --color-secondary: #667eea;   /* morado acento MOLTEC (antes azul) */
+  --color-danger:    #f56565;   /* rojo   */
+  --color-warning:   #ed8936;   /* naranja */
+  --color-info:      #9f7aea;   /* lila   */
+  --color-success:   #38a169;   /* verde oscuro */
+
+  /* ── Paleta oscura MOLTEC ── */
+  --bg-base:         #131F2B;   /* fondo principal */
+  --bg-surface:      #1a2d3d;   /* tarjetas, modales, tabla */
+  --bg-elevated:     #223344;   /* hover de filas, filtros, thead */
+  --bg-input:        #1e3448;   /* fondo de inputs y selects */
+  --text-primary:    #ffffff;
+  --text-secondary:  rgba(255, 255, 255, 0.75);
+  --text-muted:      rgba(255, 255, 255, 0.45);
+  --text-light:      rgba(255, 255, 255, 0.30);
+  --border:          rgba(255, 255, 255, 0.08);
+  --border-focus:    #667eea;
+  --shadow-sm:       0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md:       0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg:       0 10px 25px rgba(0, 0, 0, 0.5);
+  --shadow-xl:       0 20px 60px rgba(0, 0, 0, 0.7);
+
+  /* ── Radios (sin cambios) ── */
+  --border-radius-sm:   4px;
+  --border-radius-md:   8px;
+  --border-radius-lg:   12px;
+  --border-radius-xl:   16px;
+  --border-radius-pill: 20px;
+
+  /* ── Espaciado (sin cambios) ── */
+  --spacing-xs:  4px;
+  --spacing-sm:  8px;
+  --spacing-md:  12px;
+  --spacing-lg:  16px;
+  --spacing-xl:  20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+
+  /* ── Transiciones (sin cambios) ── */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* ── Tipografía (sin cambios) ── */
+  --font-size-xs:   11px;
+  --font-size-sm:   12px;
+  --font-size-base: 14px;
+  --font-size-md:   16px;
+  --font-size-lg:   18px;
+  --font-size-xl:   20px;
+  --font-size-2xl:  24px;
+  --font-size-3xl:  28px;
+}
+
+/* === RESET Y BÁSICOS === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.crud-container {
+  font-family: Arial, sans-serif;
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* === LOADING === */
+.crud-loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  gap: var(--spacing-xl);
+}
+
+/* Spinner con color de acento */
+.crud-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--color-secondary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* === HEADER === */
+.crud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--border);   /* separador sutil oscuro */
+  flex-wrap: wrap;
+  gap: var(--spacing-xl);
+}
+
+.crud-title-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.crud-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  margin: 0 0 8px 0;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.crud-subtitle {
+  font-size: var(--font-size-md);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.crud-header-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+/* === BOTONES === */
+.crud-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 12px 16px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.crud-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.crud-btn-primary { background-color: var(--color-primary); color: white; }
+.crud-btn-primary:hover:not(:disabled) {
+  background-color: #2f855a;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.crud-btn-secondary { background-color: var(--color-secondary); color: white; }
+.crud-btn-secondary:hover:not(:disabled) {
+  background-color: #5a67d8;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.crud-btn-info { background-color: var(--color-info); color: white; }
+.crud-btn-info:hover:not(:disabled) {
+  background-color: #805ad5;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.crud-btn-danger { background-color: var(--color-danger); color: white; }
+.crud-btn-danger:hover:not(:disabled) {
+  background-color: #e53e3e;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.crud-btn-warning { background-color: var(--color-warning); color: white; }
+.crud-btn-warning:hover:not(:disabled) {
+  background-color: #dd6b20;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Botón claro adaptado al tema oscuro */
+.crud-btn-light {
+  background-color: var(--bg-elevated);
+  color: var(--text-secondary);
+  height: 42px;
+}
+.crud-btn-light:hover:not(:disabled) {
+  background-color: #2d4a63;
+  transform: translateY(-1px);
+}
+
+.crud-btn-icon {
+  padding: 6px;
+  min-width: 32px;
+  min-height: 32px;
+  justify-content: center;
+}
+
+/* === ESTADÍSTICAS === */
+.crud-stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.crud-stat-card {
+  background-color: var(--bg-surface);
+  padding: 15px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.crud-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background-color: var(--bg-elevated);
+}
+
+.crud-stat-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.crud-stat-number {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* === BÚSQUEDA === */
+.crud-search-container {
+  margin-bottom: 25px;
+}
+
+.crud-search-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  padding: 12px 16px;
+  gap: var(--spacing-md);
+  max-width: 600px;
+  transition: all var(--transition-base);
+}
+
+.crud-search-box:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.crud-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  color: var(--text-primary);
+  background-color: transparent;        /* hereda el fondo del contenedor */
+}
+
+.crud-search-input::placeholder {
+  color: var(--text-light);
+}
+
+/* ========================================
+   FILTROS
+   ======================================== */
+
+/* Contenedor de filtros */
+.crud-filters-container {
+  background-color: var(--bg-surface);
+  padding: 20px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border);
+  margin-bottom: 25px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Grid adaptativo de filtros */
+.crud-filters-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+/* Grupo individual de filtro */
+.crud-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Etiqueta de filtro */
+.crud-filter-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: block;
+  height: 16px;
+  line-height: 16px;
+  margin-bottom: 0;
+}
+
+/* Label invisible (mantiene alineación del botón resetear) */
+.crud-filter-label-invisible {
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  height: 16px;
+}
+
+/* Inputs y selects de filtros */
+.crud-filter-input {
+  width: 100%;
+  padding: 10px 12px !important;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  background-color: var(--bg-input);     /* fondo oscuro para inputs */
+  font-family: inherit;
+  transition: border-color var(--transition-base);
+  color: var(--text-primary);
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  line-height: normal !important;
+  box-sizing: border-box !important;
+  vertical-align: top;
+  margin: 0 !important;
+}
+
+/* Select con flecha adaptada al tema oscuro */
+.crud-filter-input[type="select"],
+select.crud-filter-input {
+  cursor: pointer;
+  appearance: none;
+  /* Flecha blanca para fondo oscuro */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23aaa' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: var(--bg-input);
+  padding-right: 36px !important;
+}
+
+/* Input date */
+.crud-filter-input[type="date"] {
+  cursor: pointer;
+  padding: 10px 12px !important;
+  line-height: normal !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color-scheme: dark;               /* fuerza el picker de fecha en modo oscuro */
+}
+
+.crud-filter-input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+  filter: invert(1);                /* invierte el ícono del calendario a blanco */
+  margin: 0;
+  padding: 0;
+}
+
+/* Focus en filtros */
+.crud-filter-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* Botón de resetear filtros */
+.crud-filter-reset-btn {
+  width: 100%;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px !important;
+  margin: 0 !important;
+}
+
+/* Barra de filtros activos */
+.crud-active-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding: 12px;
+  background-color: rgba(102, 126, 234, 0.1);    /* acento translúcido */
+  border: 1px solid rgba(102, 126, 234, 0.25);
+  border-radius: var(--border-radius-md);
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.crud-active-filters-text {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+/* Tags de filtros activos */
+.crud-filter-tag {
+  background-color: var(--color-secondary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.crud-results-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Responsive filtros */
+@media (max-width: 768px) { .crud-filters-row { grid-template-columns: 1fr; } }
+@media (max-width: 480px) {
+  .crud-filters-container { padding: 15px; }
+  .crud-filter-input { font-size: 14px; }
+}
+
+/* === TABLA === */
+.crud-table-container {
+  background-color: var(--bg-surface);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+/* Encabezado pegajoso */
+.crud-table thead {
+  background-color: var(--bg-elevated);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.crud-table th {
+  padding: 16px 8px;
+  text-align: left;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.crud-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background-color var(--transition-base);
+}
+
+.crud-table tbody tr:hover {
+  background-color: var(--bg-elevated);
+}
+
+.crud-table td {
+  padding: 16px 8px;
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.crud-table-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.crud-no-results {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* === BADGES ===
+   Los badges conservan sus colores funcionales pero
+   con fondos más oscuros para no chocar con el tema.
+*/
+.crud-badge {
+  padding: 4px 12px;
+  border-radius: var(--border-radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+/* Badges con fondo más sólido y texto oscuro para máximo contraste */
+.crud-badge-success {
+  background-color: #68d391;   /* verde claro */
+  color: #1a3a2a !important;   /* texto oscuro sobre fondo claro */
+}
+
+.crud-badge-warning {
+  background-color: #f6ad55;   /* naranja claro */
+  color: #4a2008 !important;   /* texto oscuro */
+}
+
+.crud-badge-danger {
+  background-color: #fc8181;   /* rojo claro */
+  color: #4a0808 !important;   /* texto oscuro */
+}
+
+.crud-badge-info {
+  background-color: #667eea;   /* morado acento */
+  color: #ffffff !important;   /* texto blanco */
+}
+
+.crud-badge-light {
+  background-color: var(--bg-elevated);
+  color: var(--text-secondary) !important;
+}
+
+/* === MODALES === */
+.crud-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);      /* overlay más oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.crud-modal-content {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3xl);
+  width: 100%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  color: var(--text-primary);
+}
+
+.crud-modal-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--border);
+}
+
+.crud-modal-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.crud-modal-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.crud-modal-full-width {
+  grid-column: 1 / -1;
+}
+
+.crud-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.crud-label {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* Inputs, selects y textareas del modal */
+.crud-input,
+.crud-select,
+.crud-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  transition: all var(--transition-base);
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+}
+
+.crud-input::placeholder,
+.crud-textarea::placeholder {
+  color: var(--text-light);
+}
+
+.crud-input:focus,
+.crud-select:focus,
+.crud-textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.crud-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.crud-select {
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.crud-input-with-counter {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.crud-char-counter         { position: absolute; right: 8px; bottom: -18px; font-size: var(--font-size-sm); color: var(--text-muted); font-weight: 500; }
+.crud-char-counter-warning { color: var(--color-warning); }
+.crud-char-counter-danger  { color: var(--color-danger); }
+
+.crud-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.crud-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-secondary);    /* colorea el checkbox con el acento */
+}
+
+/* Caja de info dentro del modal */
+.crud-info-box {
+  background-color: rgba(102, 126, 234, 0.1);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(102, 126, 234, 0.25);
+  color: var(--text-secondary);
+}
+
+.crud-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-3xl);
+  padding-top: var(--spacing-2xl);
+  border-top: 1px solid var(--border);
+}
+
+/* Mensaje de advertencia en modal */
+.crud-warning-message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 12px;
+  background-color: rgba(245, 101, 101, 0.1);
+  border: 1px solid rgba(245, 101, 101, 0.25);
+  border-radius: var(--border-radius-md);
+  color: #fc8181;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  margin-top: var(--spacing-lg);
+}
+
+/* === REPORTES === */
+.crud-report-config {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.crud-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.crud-preview-section {
+  background-color: var(--bg-elevated);
+  padding: 15px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border);
+}
+
+.crud-preview-content {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .crud-header            { flex-direction: column; }
+  .crud-title-section     { min-width: 100%; }
+  .crud-title             { font-size: var(--font-size-2xl); }
+  .crud-header-actions    { width: 100%; justify-content: stretch; }
+  .crud-btn               { flex: 1; justify-content: center; }
+  .crud-stats-container   { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+  .crud-stat-card         { padding: 12px; }
+  .crud-stat-number       { font-size: var(--font-size-xl); }
+  .crud-search-box        { max-width: 100%; }
+  .crud-filters-row       { grid-template-columns: 1fr; }
+  .crud-table-container   { border-radius: var(--border-radius-md); max-height: 60vh; }
+  .crud-table             { min-width: 700px; font-size: 13px; }
+  .crud-modal-content     { max-width: calc(100vw - 40px); padding: var(--spacing-2xl); }
+  .crud-modal-form        { grid-template-columns: 1fr; gap: var(--spacing-lg); }
+  .crud-modal-actions     { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .crud-container         { padding: 0; }
+  .crud-title             { font-size: var(--font-size-xl); }
+  .crud-subtitle          { font-size: var(--font-size-base); }
+  .crud-stats-container   { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .crud-stat-card         { padding: 10px; }
+  .crud-stat-title        { font-size: var(--font-size-xs); }
+  .crud-stat-number       { font-size: var(--font-size-lg); }
+  .crud-table-container   { margin: 0 -15px; border-radius: 0; max-height: 45vh; }
+  .crud-table             { min-width: 600px; font-size: 12px; }
+  .crud-table th,
+  .crud-table td          { padding: 12px 6px; }
+  .crud-modal-content     { padding: var(--spacing-xl); max-width: calc(100vw - 20px); }
+  .crud-modal-title       { font-size: var(--font-size-xl); }
+  .crud-btn               { padding: 10px 14px; font-size: 13px; }
+}
+
+@media (min-width: 1280px) and (max-height: 720px) {
+  .crud-table-container   { max-height: 50vh; }
+  .crud-modal-content     { max-height: 75vh; }
+}
+
+/* === UTILIDADES === */
+.crud-hidden-mobile { display: table-cell; }
+@media (max-width: 768px) { .crud-hidden-mobile { display: none !important; } }
+
+.crud-hidden-small-mobile { display: table-cell; }
+@media (max-width: 640px) { .crud-hidden-small-mobile { display: none !important; } }
+
+/* === ANIMACIONES === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.crud-fade-in { animation: fadeIn 0.3s ease; }
+
+/* === ACCESIBILIDAD === */
+.crud-btn:focus-visible,
+.crud-input:focus-visible,
+.crud-select:focus-visible,
+.crud-textarea:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* === SCROLLBAR PERSONALIZADA (tema oscuro) === */
+.crud-table-container::-webkit-scrollbar,
+.crud-modal-content::-webkit-scrollbar  { width: 8px; height: 8px; }
+
+.crud-table-container::-webkit-scrollbar-track,
+.crud-modal-content::-webkit-scrollbar-track { background: var(--bg-base); }
+
+.crud-table-container::-webkit-scrollbar-thumb,
+.crud-modal-content::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+  border-radius: 4px;
+}
+
+.crud-table-container::-webkit-scrollbar-thumb:hover,
+.crud-modal-content::-webkit-scrollbar-thumb:hover { background: var(--color-secondary); }
+
+/* === PARCHE DE ALTURA UNIFORME (se mantiene igual) === */
+.crud-filter-input,
+.crud-filter-input[type="date"],
+select.crud-filter-input,
+.crud-filter-reset-btn {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  padding: 10px 12px !important;
+  box-sizing: border-box !important;
+  line-height: normal !important;
+}
+
+/* ========================================
+   FIX TEMA OSCURO - TEXTOS GRISES
+   Fuerza color blanco en todos los textos
+   de la tabla que puedan heredar colores
+   del tema claro anterior.
+   ======================================== */
+
+/* Todas las celdas y su contenido directo */
+.crud-table td,
+.crud-table td * {
+  color: var(--text-primary) !important;
+}
+
+/* Encabezados de columna */
+.crud-table th,
+.crud-table th * {
+  color: var(--text-secondary) !important;
+}
+
+/* Textos secundarios dentro de celdas
+   (ej: descripción debajo del nombre del proyecto) */
+.crud-table td p,
+.crud-table td span,
+.crud-table td small,
+.crud-table td div {
+  color: var(--text-primary) !important;
+}
+
+/* Iconos de texto (lucide, etc.) dentro de celdas */
+.crud-table td svg {
+  color: var(--text-secondary) !important;
+  stroke: var(--text-secondary) !important;
+}
+
+/* Excepción: los badges tienen sus propios colores definidos arriba con !important,
+   así que esta regla solo evita que hereden el color blanco de las celdas */
+.crud-table td .crud-badge {
+  color: inherit;
+}
+
+/* Excepción: botones de acción tampoco */
+.crud-table td .crud-btn,
+.crud-table td .crud-btn * {
+  color: white !important;
+}
+
+/* Textos de cotización (verde) */
+.crud-table td [style*="color: #"],
+.crud-table td [style*="color:#"] {
+  color: var(--text-primary) !important;
+}
+
+/* Modal — también forzar blanco en cualquier texto interno */
+.crud-modal-content,
+.crud-modal-content p,
+.crud-modal-content span,
+.crud-modal-content div,
+.crud-modal-content label {
+  color: var(--text-primary);
+}
+
+/* Inputs del modal con texto blanco */
+.crud-input,
+.crud-select,
+.crud-textarea {
+  color: var(--text-primary) !important;
+}
+
+/* Options del select (fondo oscuro en navegadores que lo soporten) */
+.crud-select option,
+select.crud-filter-input option {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}

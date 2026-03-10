@@ -13,7 +13,7 @@ import {
   Menu,
   X
 } from 'lucide-react';
-import './sidebar2.css';
+import './sidebar3.css';
 
 const Sidebar = ({ 
   activeSection, 
@@ -206,7 +206,7 @@ const Sidebar = ({
                 <div className="sidebar-menu-icon">
                   <Icon 
                     size={20} 
-                    color={isActive ? '#131F2B' : (item.requireAdmin ? '#805ad5' : '#6c757d')} 
+                    color={isActive ? '#ffffff' : (item.requireAdmin ? '#b794f4' : 'rgba(255,255,255,0.55)')} 
                   />
                 </div>
                 <span className="sidebar-menu-text">
@@ -229,7 +229,7 @@ const Sidebar = ({
             className="sidebar-logout-button"
             onMouseEnter={(e) => {
               if (!isMobile) {
-                e.currentTarget.style.backgroundColor = '#fed7d7';
+                e.currentTarget.style.backgroundColor = 'rgba(229, 62, 62, 0.12)';
                 e.currentTarget.style.borderLeftColor = '#e53e3e';
               }
             }}
@@ -242,10 +242,6 @@ const Sidebar = ({
               <LogOut size={20} color="#e53e3e" />
             </div>
             <span className="sidebar-logout-text">Cerrar Sesión</span>
-            {/* Tooltip para cuando está colapsado */}
-            {isCollapsed && !isMobile && (
-              <span className="menu-tooltip">Cerrar Sesión</span>
-            )}
           </button>
         </div>
       </div>

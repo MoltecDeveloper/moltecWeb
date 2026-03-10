@@ -1,0 +1,461 @@
+/* ========================================
+   SIDEBAR RESPONSIVE - MOLTEC S.A.
+   Tema Oscuro - Color corporativo #131F2B
+   ======================================== */
+
+/* === VARIABLES CSS === */
+:root {
+  --sidebar-width-expanded:  280px;
+  --sidebar-width-collapsed: 80px;
+  --sidebar-transition:      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Paleta oscura MOLTEC — igual que Dashboard y AdminStyles */
+  --bg-base:        #131F2B;   /* fondo principal de la app */
+  --bg-surface:     #1a2d3d;   /* fondo del sidebar */
+  --bg-elevated:    #223344;   /* hover, sección de usuario */
+  --text-primary:   #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted:     rgba(255, 255, 255, 0.45);
+  --accent:         #667eea;   /* morado corporativo */
+  --accent-hover:   #7c91f0;
+  --border:         rgba(255, 255, 255, 0.08);
+  --shadow:         rgba(0, 0, 0, 0.5);
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.sidebar {
+  width: var(--sidebar-width-expanded);
+  height: 100vh;
+  background-color: var(--bg-surface);       /* panel oscuro, un tono sobre el fondo */
+  border-right: 1px solid var(--border);     /* separador sutil */
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  box-shadow: 2px 0 16px var(--shadow);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: var(--sidebar-transition);
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+
+/* === BOTÓN TOGGLE (hamburguesa / X) === */
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent) 0%, #5a67d8 100%);  /* acento morado */
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1001;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.35);
+}
+
+.sidebar-toggle-btn:hover {
+  background: linear-gradient(135deg, var(--accent-hover) 0%, #667eea 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+.sidebar-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+/* Ícono hamburguesa — 3 líneas blancas */
+.toggle-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.toggle-icon-line {
+  width: 18px;
+  height: 2px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 2px 0;
+}
+
+/* Estado expandido → hamburguesa normal */
+.sidebar:not(.collapsed) .toggle-icon-line:nth-child(1) { transform: translateY(0); }
+.sidebar:not(.collapsed) .toggle-icon-line:nth-child(2) { opacity: 1; }
+.sidebar:not(.collapsed) .toggle-icon-line:nth-child(3) { transform: translateY(0); }
+
+/* Estado colapsado → las líneas forman una X */
+.sidebar.collapsed .toggle-icon-line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.sidebar.collapsed .toggle-icon-line:nth-child(2) { opacity: 0; }
+.sidebar.collapsed .toggle-icon-line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* === SECCIÓN DE USUARIO === */
+.sidebar-user-section {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-elevated);      /* ligeramente más elevado que el sidebar */
+  border-bottom: 1px solid var(--border);
+  transition: var(--sidebar-transition);
+}
+
+.sidebar.collapsed .sidebar-user-section {
+  padding: 20px 10px;
+}
+
+/* Avatar circular con borde de acento */
+.sidebar-user-avatar {
+  width: 70px;
+  height: 70px;
+  background-color: var(--bg-base);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  border: 3px solid var(--accent);           /* borde morado para destacar */
+  transition: var(--sidebar-transition);
+}
+
+.sidebar.collapsed .sidebar-user-avatar {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 0;
+}
+
+/* Nombre y rol se desvanecen al colapsar */
+.sidebar-user-info {
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  max-width: 100%;
+}
+
+.sidebar.collapsed .sidebar-user-info {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.sidebar-user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+  font-size: 14px;
+  color: var(--text-muted);                  /* más atenuado para jerarquía visual */
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === SEPARADOR === */
+.sidebar-separator {
+  height: 1px;
+  background-color: var(--border);
+  margin: 0 20px;
+}
+
+.sidebar.collapsed .sidebar-separator {
+  margin: 0 10px;
+}
+
+/* === NAVEGACIÓN === */
+.sidebar-navigation {
+  flex: 1;
+  padding: 20px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Scrollbar personalizado para tema oscuro */
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-elevated) transparent;
+}
+
+.sidebar-navigation::-webkit-scrollbar       { width: 6px; }
+.sidebar-navigation::-webkit-scrollbar-track { background: transparent; }
+.sidebar-navigation::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+  border-radius: 3px;
+}
+.sidebar-navigation::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* === ÍTEMS DEL MENÚ === */
+.sidebar-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  text-align: left;
+  position: relative;
+}
+
+.sidebar.collapsed .sidebar-menu-item {
+  padding: 14px 0;
+  justify-content: center;
+}
+
+.sidebar-menu-item:hover {
+  background-color: var(--bg-elevated);
+}
+
+/* Ítem activo: fondo translúcido de acento + borde izquierdo */
+.sidebar-menu-item.active {
+  background-color: rgba(102, 126, 234, 0.15);
+  border-left-color: var(--accent);
+}
+
+/* Ítem exclusivo de admin: fondo lila muy sutil */
+.sidebar-menu-item.admin-only {
+  background-color: rgba(159, 122, 234, 0.08);
+  border-color: rgba(159, 122, 234, 0.2);
+}
+
+/* === ÍCONO DEL MENÚ === */
+.sidebar-menu-icon {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  transition: margin 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-menu-icon {
+  margin-right: 0;
+}
+
+/* === TEXTO DEL MENÚ === */
+.sidebar-menu-text {
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  color: var(--text-secondary);              /* blanco suavizado para no saturar */
+}
+
+.sidebar.collapsed .sidebar-menu-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+/* Texto activo: blanco puro */
+.sidebar-menu-item.active .sidebar-menu-text {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Texto admin: lila para diferenciarlo */
+.sidebar-menu-item.admin-only .sidebar-menu-text {
+  color: #b794f4;
+}
+
+/* === TOOLTIP (visible al hacer hover cuando está colapsado) === */
+.sidebar-menu-item .menu-tooltip {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  margin-left: 10px;
+  z-index: 1002;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* Triángulo apuntando al sidebar */
+.sidebar-menu-item .menu-tooltip::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 4px 4px 0;
+  border-color: transparent var(--bg-elevated) transparent transparent;
+}
+
+.sidebar.collapsed .sidebar-menu-item:hover .menu-tooltip {
+  opacity: 1;
+}
+
+/* === SECCIÓN DE LOGOUT === */
+.sidebar-logout-section {
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-logout-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  text-align: left;
+}
+
+.sidebar.collapsed .sidebar-logout-button {
+  padding: 14px 0;
+  justify-content: center;
+}
+
+/* Hover: rojo muy suave adaptado al tema oscuro */
+.sidebar-logout-button:hover {
+  background-color: rgba(229, 62, 62, 0.12);
+  border-left-color: #e53e3e;
+}
+
+.sidebar-logout-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #fc8181 !important;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease;  /* igual que sidebar-menu-text */
+}
+
+/* Ocultar texto igual que los demás items del menú cuando está colapsado */
+.sidebar.collapsed .sidebar-logout-text {
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 0 !important;
+  visibility: hidden !important;
+}
+
+/* === RESPONSIVE MÓVIL === */
+@media (max-width: 768px) {
+  /* En móvil el sidebar entra desde la izquierda */
+  .sidebar {
+    transform: translateX(-100%);
+    width: var(--sidebar-width-expanded);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* El botón toggle de desktop se oculta en móvil */
+  .sidebar-toggle-btn {
+    display: none;
+  }
+
+  /* Botón hamburguesa flotante para móvil */
+  .mobile-menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--accent) 0%, #5a67d8 100%);
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-btn:hover {
+    background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%);
+    transform: scale(1.05);
+  }
+
+  .mobile-menu-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Overlay oscuro al abrir el sidebar en móvil */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);   /* más oscuro que antes, acorde al tema */
+    z-index: 999;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu-btn    { display: none; }
+  .sidebar-overlay    { display: none !important; }
+}
+
+/* === ANIMACIONES === */
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.sidebar.mobile-open {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* === ACCESIBILIDAD — quitar highlight de tap en móvil === */
+.sidebar-toggle-btn,
+.sidebar-menu-item,
+.sidebar-logout-button {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
