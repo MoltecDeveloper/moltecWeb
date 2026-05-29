@@ -44,10 +44,10 @@ const pool = mysql.createPool({
     queueLimit: 0,
     acquireTimeout: 30000,    // 30 segundos timeout
     timeout: 30000,
-    reconnect: true,
-    ssl: {
-        rejectUnauthorized: false  // 🔐 REQUERIDO PARA RAILWAY
-    }
+    //reconnect: true,
+    //ssl: {
+        //rejectUnauthorized: false  // 🔐 REQUERIDO PARA RAILWAY
+    //}
 });
 
 // Convertir a promesas para usar async/await
