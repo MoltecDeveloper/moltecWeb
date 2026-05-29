@@ -35,7 +35,7 @@ require('dotenv').config();
 // 🔗 POOL CON PUERTO RAILWAY CONFIGURADO
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 17479,  // 🔧 USA LA VARIABLE ENV
+    port: process.env.DB_PORT || 4000,  // 🔧 USA LA VARIABLE ENV
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
@@ -45,9 +45,10 @@ const pool = mysql.createPool({
     acquireTimeout: 30000,    // 30 segundos timeout
     timeout: 30000,
     //reconnect: true,
-    //ssl: {
-        //rejectUnauthorized: false  // 🔐 REQUERIDO PARA RAILWAY
-    //}
+    ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true // TiDB exige conexión segura
+    }
 });
 
 // Convertir a promesas para usar async/await
